@@ -1,0 +1,181 @@
+---
+title: 'Documentation'
+description: 'Get started with MonteloAI in under 5 minutes'
+---
+
+## Installation
+
+Start by installing montelo:
+
+```bash
+npm install montelo
+```
+
+## Initialize
+
+Initialize Montelo. Will generate a `montelo.config.json` and an example prompt and tool.
+
+```bash
+npx montelo init
+```
+
+## Changes
+
+When you make changes to a prompt or a tool, simply run:
+
+```bash
+npx montelo generate
+```
+
+## Promptfile
+
+Promptfiles help you keep your prompts separate from your code.
+
+```html weatherman.prompt
+<System>
+You are a weatherman.
+</System>
+
+<User>
+{{message}}
+</User>
+```
+
+Use `{{ }}` to pass in arguments.
+
+MonteloAI will then generate the necessary code to call the LLM.
+For example, running `npx montelo generate` will output the following:
+
+```typescript prompts.montelo.ts
+export const prompts = {
+  weatherman: ({ message }: { message: string }) => [
+    {
+      role: "system",
+      content: "You are a weatherman.",
+    },
+    { role: "user", content: message },
+  ],
+};
+```
+
+You can then use the `prompts` object in your code.
+
+## Tools
+
+To build a tool using MonteloAI, start with the following:
+
+```typescript getCurrentWeather.ts
+import { AIFunction } from "montelo";
+import { z } from "zod";
+
+const FunctionInput = z.object({
+  location: z.string().describe("The city, e.g San Francisco."),
+  unit: z.enum(["Celsius", "Fahrenheit"]).describe("The unit of temperature."),
+});
+type TFunctionInput = z.infer<typeof FunctionInput>;
+
+const getCurrentWeather = async (params: TFunctionInput): Promise<string> => {
+  return `The weather in ${params.location} is currently 22 degrees ${params.unit}.`;
+};
+
+export default new AIFunction({
+  name: "getCurrentWeather",
+  function: getCurrentWeather,
+  description: "Get the current weather in a given location.",
+  schema: FunctionInput,
+});
+```
+
+Running `npx montelo generate` will output the following object:
+
+```typescript tools.montelo.ts
+import getCurrentWeather from "./getCurrentWeather";
+
+export const tools = {
+  getCurrentWeather,
+};
+
+export const ToolDefinitions = Object.values(tools).map((func) => func.toJSON());
+```
+
+You can then use the tools you've defined
+
+```typescript
+import { ToolDefinitions } from "path/to/tools.montelo.ts";
+
+await openai.chat.completions.create({
+    ...,
+    tools: ToolDefinitions,
+  });
+```
+
+## Logging
+
+MonteloAI provides the easiest-to-use logging SDK for LLM DevOps.
+
+### Setup
+
+First create an account [here](https://app.montelo.ai).
+
+Select your environment and get it's API key. Then set that API key in your env
+
+```dotenv
+MONTELO_API_KEY=sk-....
+```
+
+### Basic
+
+To get started, simply replace the OpenAI instantiation with MonteloAI.
+
+```typescript
+import { MonteloAI } from "montelo";
+
+// const openai = new OpenAI(); You can remove this
+const montelo = new MonteloAI({
+  montelo: {}, // montelo options
+  openai: {}, // the constructor arguments to pass into openai
+});
+```
+
+Then, simply replace all existing `openai` calls with `montelo.openai`.
+
+You'll have to add a `name` key to each call, which makes it easier to view the logs.
+
+After this, you should be set! All requests to OpenAI will be logged in MonteloAI.
+
+### Tracing
+
+To start a trace, create a trace instance and use it on multiple calls.
+
+```typescript
+const montelo = new MonteloAI();
+
+const trace = montelo.startTrace({ name: "MyTrace" });
+
+// these all go under the same trace
+await trace.openai.chat.completions.create({ ... });
+await trace.log({ ... });
+await trace.openai.chat.completions.create({ ... });
+
+// this is not part of the trace
+await montelo.openai.chat.completion.create({ ... });
+```
+
+### Manual
+
+To manually log to MonteloAI
+
+```typescript
+montelo.log({ ... });
+
+// or as part of a trace
+trace.log({ ... });
+```
+
+## Full Example
+
+See a full example [here](https://github.com/montelo-ai/montelo/tree/main/sandbox).
+
+## Future
+
+We have a LOT more awesome features we'll be launching soon. Join the [Discord](https://discord.gg/PSS7sgP2) to find out.
