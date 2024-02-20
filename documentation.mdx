@@ -161,6 +161,23 @@ await trace.openai.chat.completions.create({ ... });
 await montelo.openai.chat.completion.create({ ... });
 ```
 
+### Nesting
+
+To nest logs under one trace, use `/` between the names.
+
+```typescript
+const trace = montelo.startTrace({ name: "Agent" });
+
+await trace.openai.chat.completions.create({
+  name: "Writer",
+});
+
+await trace.openai.chat.completions.create({
+  // this log is now nested under the above Writer log
+  name: "Writer / Reviewer",
+});
+```
+
 ### Manual
 
 To manually log to MonteloAI
