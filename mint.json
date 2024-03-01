@@ -1,41 +1,80 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "MonteloAI Documentation",
-  "logo": {
-    "dark": "/logo/logo.svg",
-    "light": "/logo/logo.svg"
+  "name": "Montelo Documentation",
+  "logo": "/assets/logo.svg",
+  "modeToggle": {
+    "default": "dark",
+    "isHidden": true
   },
-  "favicon": "/favicon.png",
+  "favicon": "/assets/favicon.png",
   "colors": {
-    "primary": "#5C1D7A",
-    "light": "#7d4a95",
-    "dark": "#5C1D7A",
+    "primary": "#712395",
+    "light": "#8A2BB6",
+    "dark": "#712395",
     "anchors": {
-      "from": "#5C1D7A",
-      "to": "#7d4a95"
+      "from": "#712395",
+      "to": "#8A2BB6"
     }
   },
-  "topbarLinks": [
-    {
-      "name": "Support",
-      "url": "https://discord.gg/PSS7sgP2"
-    }
-  ],
   "topbarCtaButton": {
     "name": "Dashboard",
     "url": "https://app.montelo.ai"
   },
   "navigation": [
     {
-      "group": "Get Started",
+      "group": "Introduction",
       "pages": [
-        "introduction",
-        "documentation"
+        "general/welcome",
+        "general/quickstart",
+        "general/examples"
+      ]
+    },
+    {
+      "group": "API Keys",
+      "pages": [
+        "apiKeys/montelo",
+        {
+          "group": "LLM Providers",
+          "pages": ["apiKeys/openai"]
+        }
+      ]
+    },
+    {
+      "group": "Traces & Logs",
+      "pages": [
+        "traces/logs",
+        "traces/traces"
+      ]
+    },
+    {
+      "group": "SDK",
+      "pages": [
+        "sdk/introduction"
       ]
     }
   ],
+  "anchors": [
+    {
+      "name": "Blog",
+      "icon": "newspaper",
+      "url": "https://blog.montelo.ai"
+    },
+    {
+      "name": "Discord",
+      "icon": "discord",
+      "url": "https://discord.gg/DfnXRGtFhP"
+    }
+  ],
+  "tabs": [
+    {
+      "name": "SDK Reference",
+      "url": "sdk"
+    }
+  ],
   "footerSocials": {
+    "website": "https://montelo.ai",
     "twitter": "https://twitter.com/monteloai",
-    "github": "https://github.com/montelo-ai"
+    "github": "https://github.com/montelo-ai",
+    "discord": "https://discord.gg/DfnXRGtFhP"
   }
 }

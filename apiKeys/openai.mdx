@@ -1,0 +1,97 @@
+---
+title: OpenAI
+description: How API Keys work for OpenAI.
+---
+
+The [OpenAI Node.js SDK](https://github.com/openai/openai-node?tab=readme-ov-file#openai-node-api-library) exposes convenient access to the OpenAI REST API from TypeScript.
+
+The OpenAI constructor takes in the object defined below.
+
+<Accordion title="See the object here.">
+You can find the code snippet [here](https://github.com/openai/openai-node/blob/6175eca426b15990be5e5cdb0e8497e547f87d8a/src/index.ts#L10).
+```typescript
+export interface ClientOptions {
+  /**
+   * Defaults to process.env['OPENAI_API_KEY'].
+   */
+  apiKey?: string | undefined;
+
+  /**
+   * Defaults to process.env['OPENAI_ORG_ID'].
+   */
+  organization?: string | null | undefined;
+
+  /**
+   * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
+   *
+   * Defaults to process.env['OPENAI_BASE_URL'].
+   */
+  baseURL?: string | null | undefined;
+
+  /**
+   * The maximum amount of time (in milliseconds) that the client should wait for a response
+   * from the server before timing out a single request.
+   *
+   * Note that request timeouts are retried by default, so in a worst-case scenario you may wait
+   * much longer than this timeout before the promise succeeds or fails.
+   */
+  timeout?: number;
+
+  /**
+   * An HTTP agent used to manage HTTP(S) connections.
+   *
+   * If not provided, an agent will be constructed by default in the Node.js environment,
+   * otherwise no agent is used.
+   */
+  httpAgent?: Agent;
+
+  /**
+   * Specify a custom `fetch` function implementation.
+   *
+   * If not provided, we use `node-fetch` on Node.js and otherwise expect that `fetch` is
+   * defined globally.
+   */
+  fetch?: Core.Fetch | undefined;
+
+  /**
+   * The maximum number of times that the client will retry a request in case of a
+   * temporary failure, like a network error or a 5XX error from the server.
+   *
+   * @default 2
+   */
+  maxRetries?: number;
+
+  /**
+   * Default headers to include with every request to the API.
+   *
+   * These can be removed in individual requests by explicitly setting the
+   * header to `undefined` or `null` in request options.
+   */
+  defaultHeaders?: Core.Headers;
+
+  /**
+   * Default query parameters to include with every request to the API.
+   *
+   * These can be removed in individual requests by explicitly setting the
+   * param to `undefined` in request options.
+   */
+  defaultQuery?: Core.DefaultQuery;
+
+  /**
+   * By default, client-side use of this library is not allowed, as it risks exposing your secret API credentials to attackers.
+   * Only set this option to `true` if you understand the risks and have appropriate mitigations in place.
+   */
+  dangerouslyAllowBrowser?: boolean;
+}
+```
+</Accordion>
+
+With Montelo, you still have access to these options, simply by adding them to the Montelo constructor.
+
+```typescript
+import { MonteloAI } from "montelo";
+
+const montelo = new MonteloAI({
+  openai: {}, // <- this is of type ClientOptions, as defined above.
+});
+```

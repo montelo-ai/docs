@@ -1,15 +1,8 @@
 ---
-title: 'Documentation'
-description: 'Get started with MonteloAI in under 5 minutes'
+title: Promptfiles
+description: Get started with Montelo in under 5 minutes
+icon: rectangle-ad
 ---
-
-## Installation
-
-Start by installing montelo:
-
-```bash
-npm install montelo
-```
 
 ## Initialize
 
@@ -43,7 +36,7 @@ You are a weatherman.
 
 Use `{{ }}` to pass in arguments.
 
-MonteloAI will then generate the necessary code to call the LLM.
+Montelo will then generate the necessary code to call the LLM.
 For example, running `npx montelo generate` will output the following:
 
 ```typescript prompts.montelo.ts
@@ -62,7 +55,7 @@ You can then use the `prompts` object in your code.
 
 ## Tools
 
-To build a tool using MonteloAI, start with the following:
+To build a tool using Montelo, start with the following:
 
 ```typescript getCurrentWeather.ts
 import { AIFunction } from "montelo";
@@ -111,7 +104,7 @@ await openai.chat.completions.create({
 
 ## Logging
 
-MonteloAI provides the easiest-to-use logging SDK for LLM DevOps.
+Montelo provides the easiest-to-use logging SDK for LLM DevOps.
 
 ### Setup
 
@@ -125,7 +118,7 @@ MONTELO_API_KEY=sk-....
 
 ### Basic
 
-To get started, simply replace the OpenAI instantiation with MonteloAI.
+To get started, simply replace the OpenAI instantiation with Montelo.
 
 ```typescript
 import { MonteloAI } from "montelo";
@@ -141,7 +134,7 @@ Then, simply replace all existing `openai` calls with `montelo.openai`.
 
 You'll have to add a `name` key to each call, which makes it easier to view the logs.
 
-After this, you should be set! All requests to OpenAI will be logged in MonteloAI.
+After this, you should be set! All requests to OpenAI will be logged in Montelo.
 
 ### Tracing
 
@@ -180,7 +173,7 @@ await trace.openai.chat.completions.create({
 
 ### Manual
 
-To manually log to MonteloAI
+To manually log to Montelo
 
 ```typescript
 montelo.log({ ... });

@@ -1,0 +1,112 @@
+---
+title: Quickstart
+description: Let’s get you up and running with Montelo in under 2 minutes.
+icon: play
+---
+
+## Sign up for Montelo
+
+To get started, you need to [sign up](https://app.montelo.ai/auth/register) for an account.
+
+## Installing the SDK
+
+Start by installing Montelo.
+
+```bash
+npm install montelo
+```
+
+## Getting your API Key
+
+After setting up your account, you can find your API key for the environment you want to use from the dashboard.
+
+<Note>Each environment has it's own API Key.</Note>
+
+![title](/assets/ApiKey.gif)
+
+When developing in a team, it's a good idea to create a new environment for each developer.
+This way, developers can work independently without interfering with each other's work.
+
+### Setting the Montelo API Key
+
+With your API key in hand, you can now set up the SDK.
+Either include the API key as an environment variable called `MONTELO_API_KEY` or pass it as an argument to the `Montelo` constructor.
+
+<CodeGroup>
+```dotenv .env
+MONTELO_API_KEY=your-api-key
+```
+
+```typescript main.ts
+import { MonteloAI } from "montelo";
+
+const montelo = new MonteloAI();
+```
+</CodeGroup>
+
+Or to manually set the API key:
+
+```typescript main.ts
+import { MonteloAI } from "montelo";
+
+const montelo = new MonteloAI({
+  montelo: {
+    apiKey: "your-api-key",
+  },
+});
+```
+
+### Setting LLM Provider API Keys
+
+Montelo simplifies the process of using multiple LLM providers by providing a single interface to interact with them.
+We use the same authentication method as the LLM providers themselves, so you can use the same API keys you already have.
+
+To use a specific LLM provider, you need to set the API key for that provider.
+For example, to use OpenAI, you need to set the `OPENAI_API_KEY` environment variable according to the [instructions](https://platform.openai.com/docs/quickstart?context=node) provided by OpenAI.
+
+<CodeGroup>
+```dotenv .env
+MONTELO_API_KEY=your-api-key
+OPENAI_API_KEY=your-openai-api-key
+```
+
+```typescript main.ts
+import { MonteloAI } from "montelo";
+
+const montelo = new MonteloAI();
+```
+</CodeGroup>
+
+Or, to manually set the API key:
+
+```typescript main.ts
+import { MonteloAI } from "montelo";
+
+const montelo = new MonteloAI({
+  openai: {
+    apiKey: "your-openai-api-key",
+  },
+});
+```
+
+## Start using Montelo
+
+Now that you have the SDK set up, you can start using Montelo.
+
+```typescript main.ts
+import { MonteloAI } from "montelo";
+
+const montelo = new MonteloAI();
+
+await montelo.openai.chat.completions.create({ ... });
+```
+
+And that's it! After following these steps, you should have Montelo set up and ready to use.
+
+You should now be able to view logs and metrics in the Montelo dashboard.
+
+## Next Steps
+
+Now that you have Montelo set up, you can start using the SDK to build your LLM applications.
+
+Next, check out how to group multiple LLM calls into a single [trace](/traces).
