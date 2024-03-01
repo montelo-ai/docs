@@ -1,0 +1,204 @@
+---
+title: 'Montelo Class'
+description: Documentation for the Montelo class.
+---
+
+# Montelo Class
+
+```typescript
+import { Montelo } from "montelo";
+
+const montelo = new Montelo();
+```
+
+Montelo takes in an object of type `MonteloOptions`.
+
+### Constructor
+
+`MonteloOptions`:
+
+<ResponseField name="montelo" type="Montelo Client Options">
+  <Expandable title="properties">
+    <ParamField path="apiKey" type="string">
+      The Montelo API Key. Either pass it in here or set the environment variable `MONTELO_API_KEY`.
+    </ParamField>
+
+    <ParamField path="baseUrl" type="string">
+      The base URL for the Montelo API. Defaults to `https://api.montelo.ai`.
+    </ParamField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="openai" type="OpenAI Client Options">
+  <Expandable title="properties">
+    You can find the code snippet
+    [here](https://github.com/openai/openai-node/blob/6175eca426b15990be5e5cdb0e8497e547f87d8a/src/index.ts#L10).
+    ```typescript
+    export interface ClientOptions {
+    /**
+     * Defaults to process.env['OPENAI_API_KEY'].
+     */
+    apiKey ? : string | undefined;
+
+    /**
+     * Defaults to process.env['OPENAI_ORG_ID'].
+     */
+    organization?: string | null | undefined;
+
+    /**
+     * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
+     *
+     * Defaults to process.env['OPENAI_BASE_URL'].
+     */
+    baseURL?: string | null | undefined;
+
+    /**
+     * The maximum amount of time (in milliseconds) that the client should wait for a response
+     * from the server before timing out a single request.
+     *
+     * Note that request timeouts are retried by default, so in a worst-case scenario you may wait
+     * much longer than this timeout before the promise succeeds or fails.
+     */
+    timeout?: number;
+
+    /**
+     * An HTTP agent used to manage HTTP(S) connections.
+     *
+     * If not provided, an agent will be constructed by default in the Node.js environment,
+     * otherwise no agent is used.
+     */
+    httpAgent?: Agent;
+
+    /**
+     * Specify a custom `fetch` function implementation.
+     *
+     * If not provided, we use `node-fetch` on Node.js and otherwise expect that `fetch` is
+     * defined globally.
+     */
+    fetch?: Core.Fetch | undefined;
+
+    /**
+     * The maximum number of times that the client will retry a request in case of a
+     * temporary failure, like a network error or a 5XX error from the server.
+     *
+     * @default 2
+     */
+    maxRetries?: number;
+
+    /**
+     * Default headers to include with every request to the API.
+     *
+     * These can be removed in individual requests by explicitly setting the
+     * header to `undefined` or `null` in request options.
+     */
+    defaultHeaders?: Core.Headers;
+
+    /**
+     * Default query parameters to include with every request to the API.
+     *
+     * These can be removed in individual requests by explicitly setting the
+     * param to `undefined` in request options.
+     */
+    defaultQuery?: Core.DefaultQuery;
+
+    /**
+     * By default, client-side use of this library is not allowed, as it risks exposing your secret API credentials to attackers.
+     * Only set this option to `true` if you understand the risks and have appropriate mitigations in place.
+     */
+    dangerouslyAllowBrowser?: boolean;
+  }
+    ```
+  </Expandable>
+</ResponseField>
+
+### montelo.log()
+
+This method allows you to create a log in Montelo.
+
+#### Usage
+```typescript
+const montelo = new Montelo();
+
+montelo.log({ ... })
+```
+
+#### LogOptions
+
+<ResponseField name="LogInput" type="object">
+  <Expandable title="properties">
+    <ParamField path="name" type="string" required>
+      A human-readable name for the log.
+    </ParamField>
+    <ParamField path="type" type="string">
+      The type of log, indicating its general category or purpose.
+    </ParamField>
+    <ParamField path="model" type="string" optional="true">
+      The LLM model.
+    </ParamField>
+    <ParamField path="input" type="object">
+      An object representing the input data for the log event.
+    </ParamField>
+    <ParamField path="output" type="object">
+      An object representing the output data from the log event.
+    </ParamField>
+    <ParamField path="startTime" type="string">
+      The start time of the event being logged.
+    </ParamField>
+    <ParamField path="endTime" type="string">
+      The end time of the event being logged.
+    </ParamField>
+    <ParamField path="duration" type="number">
+      The duration of the event in seconds.
+    </ParamField>
+    <ParamField path="inputTokens" type="number">
+      The number of tokens used as input to the model.
+    </ParamField>
+    <ParamField path="outputTokens" type="number">
+      The number of tokens generated from the model.
+    </ParamField>
+    <ParamField path="totalTokens" type="number">
+      The sum of input tokens and output tokens.
+    </ParamField>
+    <ParamField path="extra" type="object">
+      An optional object for additional data relevant to the log event.
+    </ParamField>
+  </Expandable>
+</ResponseField>
+
+
+### montelo.trace()
+
+This method allows you to create a trace in Montelo.
+It returns a new instance of the `Montelo` class with a trace internally set.
+
+#### Usage
+```typescript
+const montelo = new Montelo();
+
+const trace = montelo.trace({ name: "Trace Name" });
+
+await trace.openai.chat.completions.create({ ... });
+await trace.log({ ... });
+```
+
+#### TraceOptions
+
+<ResponseField name="object" type="TraceOptions">
+  <Expandable title="properties">
+    <ParamField path="name" type="string" required>
+      A name for the trace.
+    </ParamField>
+
+    <ParamField path="userId" type="string">
+      The user ID for the trace.
+    </ParamField>
+
+    <ParamField path="extra" type="object">
+      An optional object for additional data relevant to the trace.
+    </ParamField>
+  </Expandable>
+</ResponseField>
+
+### montelo.openai
+
+This property is an instance of the OpenAI class. It allows you to interact with the OpenAI API, and Montelo will automatically log all relevant interactions.
