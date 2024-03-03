@@ -1,0 +1,54 @@
+---
+title: Tools
+description: Keep your tools organized and easy to use with Montelo.
+icon: hammer
+---
+
+## Introduction
+
+To build a tool using Montelo, start with the following:
+
+```typescript getCurrentWeather.ts
+import { AIFunction } from "montelo";
+import { z } from "zod";
+
+const FunctionInput = z.object({
+  location: z.string().describe("The city, e.g San Francisco."),
+  unit: z.enum(["Celsius", "Fahrenheit"]).describe("The unit of temperature."),
+});
+type TFunctionInput = z.infer<typeof FunctionInput>;
+
+const getCurrentWeather = async (params: TFunctionInput): Promise<string> => {
+  return `The weather in ${params.location} is currently 22 degrees ${params.unit}.`;
+};
+
+export default new AIFunction({
+  name: "getCurrentWeather",
+  function: getCurrentWeather,
+  description: "Get the current weather in a given location.",
+  schema: FunctionInput,
+});
+```
+
+Running `npx montelo generate` will output the following object:
+
+```typescript tools.montelo.ts
+import getCurrentWeather from "./getCurrentWeather";
+
+export const tools = {
+  getCurrentWeather,
+};
+
+export const ToolDefinitions = Object.values(tools).map((func) => func.toJSON());
+```
+
+You can then use the tools you've defined
+
+```typescript
+import { ToolDefinitions } from "path/to/tools.montelo.ts";
+
+await openai.chat.completions.create({
+    ...,
+    tools: ToolDefinitions,
+  });
+```

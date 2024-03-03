@@ -1,0 +1,42 @@
+---
+title: Setup
+description: Setup Promptfiles and tools.
+icon: play
+---
+
+## Setup
+To get started, simply run the `init` command:
+
+```bash
+npx montelo init
+```
+
+This will generate a `montelo.config.json` at the root of your project, and setup the folder structure and files for you.
+
+
+To learn more about the configuration file, check out the [CLI Config](/cli/config) section.
+
+### Default Structure
+
+By default, the `init` command will generate the following folder structure:
+
+```
+root/
+├── prompts/
+│   ├── prompts.ts
+│   └── weatherman.prompt
+├── tools/
+│   ├── getCurrentWeather.ts
+│   └── tools.ts
+└── montelo.config.json
+```
+
+And it will generate an example of a prompt and a tool.
+
+## Changes
+
+When you make changes to either the `montelo.config.json` or your prompts/tools, you can run the `generate` command.
+
+```bash
+npx montelo generate
+```

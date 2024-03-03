@@ -7,91 +7,81 @@ The [OpenAI Node.js SDK](https://github.com/openai/openai-node?tab=readme-ov-fil
 
 The OpenAI constructor takes in the object defined below.
 
-<Accordion title="See the object here.">
-You can find the code snippet [here](https://github.com/openai/openai-node/blob/6175eca426b15990be5e5cdb0e8497e547f87d8a/src/index.ts#L10).
-```typescript
-export interface ClientOptions {
-  /**
-   * Defaults to process.env['OPENAI_API_KEY'].
-   */
-  apiKey?: string | undefined;
+<ResponseField name="OpenAI Constructor Options">
+  <Expandable title="properties">
+    <ParamField path="apiKey" type="string">
+      Defaults to `process.env['OPENAI_API_KEY']`.
+    </ParamField>
 
-  /**
-   * Defaults to process.env['OPENAI_ORG_ID'].
-   */
-  organization?: string | null | undefined;
+    <ParamField path="organization" type="string">
+      Defaults to `process.env['OPENAI_ORG_ID']`.
+    </ParamField>
 
-  /**
-   * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
-   *
-   * Defaults to process.env['OPENAI_BASE_URL'].
-   */
-  baseURL?: string | null | undefined;
+    <ParamField path="baseUrl" type="string">
+      Override the default base URL for the API, e.g., `https://api.example.com/v2/`.
 
-  /**
-   * The maximum amount of time (in milliseconds) that the client should wait for a response
-   * from the server before timing out a single request.
-   *
-   * Note that request timeouts are retried by default, so in a worst-case scenario you may wait
-   * much longer than this timeout before the promise succeeds or fails.
-   */
-  timeout?: number;
+      Defaults to `process.env['OPENAI_BASE_URL']`.
+    </ParamField>
 
-  /**
-   * An HTTP agent used to manage HTTP(S) connections.
-   *
-   * If not provided, an agent will be constructed by default in the Node.js environment,
-   * otherwise no agent is used.
-   */
-  httpAgent?: Agent;
+    <ParamField path="timeout" type="number">
+      The maximum amount of time (in milliseconds) that the client should wait for a response
+      from the server before timing out a single request.
 
-  /**
-   * Specify a custom `fetch` function implementation.
-   *
-   * If not provided, we use `node-fetch` on Node.js and otherwise expect that `fetch` is
-   * defined globally.
-   */
-  fetch?: Core.Fetch | undefined;
+      Note that request timeouts are retried by default, so in a worst-case scenario you may wait
+      much longer than this timeout before the promise succeeds or fails.
+    </ParamField>
 
-  /**
-   * The maximum number of times that the client will retry a request in case of a
-   * temporary failure, like a network error or a 5XX error from the server.
-   *
-   * @default 2
-   */
-  maxRetries?: number;
+    <ParamField path="httpAgent" type="Agent">
+      An HTTP agent used to manage HTTP(S) connections.
 
-  /**
-   * Default headers to include with every request to the API.
-   *
-   * These can be removed in individual requests by explicitly setting the
-   * header to `undefined` or `null` in request options.
-   */
-  defaultHeaders?: Core.Headers;
+      If not provided, an agent will be constructed by default in the Node.js environment, otherwise no agent is used.
+    </ParamField>
 
-  /**
-   * Default query parameters to include with every request to the API.
-   *
-   * These can be removed in individual requests by explicitly setting the
-   * param to `undefined` in request options.
-   */
-  defaultQuery?: Core.DefaultQuery;
+    <ParamField path="fetch" type="Fetch">
+      Specify a custom `fetch` function implementation.
 
-  /**
-   * By default, client-side use of this library is not allowed, as it risks exposing your secret API credentials to attackers.
-   * Only set this option to `true` if you understand the risks and have appropriate mitigations in place.
-   */
-  dangerouslyAllowBrowser?: boolean;
-}
-```
-</Accordion>
+      If not provided, we use `node-fetch` on Node.js and otherwise expect that `fetch` is defined globally.
+    </ParamField>
+
+    <ParamField path="maxRetries" type="number" default={2}>
+      The maximum number of times that the client will retry a request in case of a temporary failure, like a network
+      error or a 5XX error from the server.
+    </ParamField>
+
+    <ParamField path="defaultHeaders" type="Headers">
+      Default headers to include with every request to the API.
+
+      These can be removed in individual requests by explicitly setting the header to `undefined` or `null` in request
+      options.
+    </ParamField>
+
+    <ParamField path="defaultQuery" type="DefaultQuery">
+      Default query parameters to include with every request to the API.
+
+      These can be removed in individual requests by explicitly setting the param to `undefined` in request options.
+    </ParamField>
+
+    <ParamField path="dangerouslyAllowBrowser" type="boolean" default={false}>
+      By default, client-side use of this library is not allowed, as it risks exposing your secret API credentials to
+      attackers.
+
+      Only set this option to `true` if you understand the risks and have appropriate mitigations in place.
+    </ParamField>
+  </Expandable>
+</ResponseField>
 
 With Montelo, you still have access to these options, simply by adding them to the Montelo constructor.
 
 ```typescript
-import { MonteloAI } from "montelo";
+import { Montelo } from "montelo";
 
-const montelo = new MonteloAI({
-  openai: {}, // <- this is of type ClientOptions, as defined above.
+const montelo = new Montelo({
+  openai: {
+    apiKey: "your-api-key",
+    organization: "your-organization-id",
+    timeout: 10000,
+    maxRetries: 3,
+    ...
+  },
 });
 ```

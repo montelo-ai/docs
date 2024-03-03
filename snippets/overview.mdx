@@ -1,0 +1,55 @@
+---
+title: Overview
+description: Promptfiles & Tools in Montelo
+icon: sailboat
+---
+
+## Overview
+As your project grows, you will need to manage more and more prompts and tools.
+
+For example, you may find yourself writing huge prompts and tools that become difficult to manage:
+
+```typescript
+await montelo.openai.chat.completions.create({
+  messages: [
+    {
+      role: "system",
+      message: `Some massive prompt
+that spans
+multiple lines
+`,
+    },
+  ],
+  tools: [
+    {
+      name: 'some_function',
+      description: 'Some function description',
+      parameters: {
+        type: 'object',
+        properties: {
+          // massive object
+        },
+      },
+    },
+  ]
+});
+```
+
+Montelo provides a way to manage these prompts and tools in a more organized way. We abstract the prompts and tools into
+separate files and folders, so that they can be easily managed and maintained. After using Montelo, your code will look like this:
+
+```typescript
+import { prompts, AllTools } from "path/to/folder";
+
+await montelo.openai.chat.completions.create({
+  messages: prompts.some_massive_prompt,
+  tools: AllTools,
+});
+```
+
+
+## Benefits
+
+In addition to being more organized, doing this approach allows Montelo to be able to manage your prompts and tools version
+automatically, without you having to worry about it. We'll also be able to track performance and metrics for each prompt and tool,
+and how they improve or degrade over time.

@@ -16,6 +16,16 @@
       "to": "#8A2BB6"
     }
   },
+  "topbarLinks": [
+    {
+      "name": "Community",
+      "url": "https://discord.gg/DfnXRGtFhP"
+    },
+    {
+      "name": "Blog",
+      "url": "https://blog.montelo.ai"
+    }
+  ],
   "topbarCtaButton": {
     "name": "Dashboard",
     "url": "https://app.montelo.ai"
@@ -25,8 +35,7 @@
       "group": "Introduction",
       "pages": [
         "general/welcome",
-        "general/quickstart",
-        "general/examples"
+        "general/quickstart"
       ]
     },
     {
@@ -35,7 +44,11 @@
         "apiKeys/montelo",
         {
           "group": "LLM Providers",
-          "pages": ["apiKeys/openai"]
+          "pages": [
+            "apiKeys/multiple-llms",
+            "apiKeys/openai",
+            "apiKeys/mistral"
+          ]
         }
       ]
     },
@@ -51,18 +64,6 @@
       "pages": [
         "sdk/montelo-class"
       ]
-    }
-  ],
-  "anchors": [
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://blog.montelo.ai"
-    },
-    {
-      "name": "Discord",
-      "icon": "discord",
-      "url": "https://discord.gg/DfnXRGtFhP"
     }
   ],
   "tabs": [

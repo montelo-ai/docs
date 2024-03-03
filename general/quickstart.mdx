@@ -6,13 +6,13 @@ icon: play
 
 ## Sign up for Montelo
 
-To get started, you need to [sign up](https://app.montelo.ai/auth/register) for an account.
+To get started, you need to first [sign up](https://app.montelo.ai/auth/register) for an account.
 
 ## Installing the SDK
 
 Start by installing Montelo.
 
-```bash
+```sh
 npm install montelo
 ```
 
@@ -20,7 +20,7 @@ npm install montelo
 
 After setting up your account, you can find your API key for the environment you want to use from the dashboard.
 
-<Note>Each environment has it's own API Key.</Note>
+<Note>Each project has several environments, and each environment has it’s own API Key.</Note>
 
 ![title](/assets/ApiKey.gif)
 
@@ -38,18 +38,18 @@ MONTELO_API_KEY=your-api-key
 ```
 
 ```typescript main.ts
-import { MonteloAI } from "montelo";
+import { Montelo } from "montelo";
 
-const montelo = new MonteloAI();
+const montelo = new Montelo();
 ```
 </CodeGroup>
 
 Or to manually set the API key:
 
 ```typescript main.ts
-import { MonteloAI } from "montelo";
+import { Montelo } from "montelo";
 
-const montelo = new MonteloAI({
+const montelo = new Montelo({
   montelo: {
     apiKey: "your-api-key",
   },
@@ -71,18 +71,18 @@ OPENAI_API_KEY=your-openai-api-key
 ```
 
 ```typescript main.ts
-import { MonteloAI } from "montelo";
+import { Montelo } from "montelo";
 
-const montelo = new MonteloAI();
+const montelo = new Montelo();
 ```
 </CodeGroup>
 
 Or, to manually set the API key:
 
 ```typescript main.ts
-import { MonteloAI } from "montelo";
+import { Montelo } from "montelo";
 
-const montelo = new MonteloAI({
+const montelo = new Montelo({
   openai: {
     apiKey: "your-openai-api-key",
   },
@@ -94,9 +94,9 @@ const montelo = new MonteloAI({
 Now that you have the SDK set up, you can start using Montelo.
 
 ```typescript main.ts
-import { MonteloAI } from "montelo";
+import { Montelo } from "montelo";
 
-const montelo = new MonteloAI();
+const montelo = new Montelo();
 
 await montelo.openai.chat.completions.create({ ... });
 ```

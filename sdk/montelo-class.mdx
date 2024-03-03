@@ -129,9 +129,6 @@ montelo.log({ ... })
     <ParamField path="name" type="string" required>
       A human-readable name for the log.
     </ParamField>
-    <ParamField path="type" type="string">
-      The type of log, indicating its general category or purpose.
-    </ParamField>
     <ParamField path="model" type="string" optional="true">
       The LLM model.
     </ParamField>
@@ -202,3 +199,7 @@ await trace.log({ ... });
 ### montelo.openai
 
 This property is an instance of the OpenAI class. It allows you to interact with the OpenAI API, and Montelo will automatically log all relevant interactions.
+
+### montelo.mistral
+
+This property is an instance of the Mistral class. It allows you to interact with the Mistral API, and Montelo will automatically log all relevant interactions.

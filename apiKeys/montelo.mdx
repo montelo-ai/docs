@@ -5,7 +5,7 @@ description: How API Keys work for Montelo and LLM Providers.
 
 ## For Montelo
 
-<Note>Each project has several environments, and each environment has it's own API Key.</Note>
+<Note>Each project has several environments, and each environment has it’s own API Key.</Note>
 
 To find an environment's API Key, go to the project's dashboard and click on the environment dropdown.
 
@@ -19,19 +19,19 @@ You can also rotate the API Key if you think it's been compromised. This will ge
 
 Montelo's SDK wraps around the LLM provider's TypeScript SDK. This means that you can use the LLM provider's API Key directly in Montelo's SDK, as if it were the LLM provider's SDK.
 
-You can do so in the `MonteloAI` class constructor.
+You can do so in the `Montelo` class constructor.
 
 For example, if you're using OpenAI as your LLM provider, you can use your OpenAI API Key like this:
 
 <CodeGroup>
 ```typescript main.ts
-import { MonteloAI } from "montelo";
+import { Montelo } from "montelo";
 
-const montelo = new MonteloAI();
+const montelo = new Montelo();
 
 // or
 
-const montelo = new MonteloAI({
+const montelo = new Montelo({
   openai: {
     apiKey: "your-openai-api-key"
   },
