@@ -39,15 +39,15 @@
       ]
     },
     {
-      "group": "API Keys",
+      "group": "Setup",
       "pages": [
-        "apiKeys/montelo",
+        "setup/montelo",
         {
           "group": "LLM Providers",
           "pages": [
-            "apiKeys/multiple-llms",
-            "apiKeys/openai",
-            "apiKeys/mistral"
+            "setup/multiple-llms",
+            "setup/openai",
+            "setup/mistral"
           ]
         }
       ]
