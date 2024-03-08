@@ -6,38 +6,29 @@ icon: list-timeline
 
 Each log contains information about an event that occurred in your application. This could be a user interaction, a model completion, or anything else you want to track.
 
-Logs are independent and by default are not linked to any other logs. However, you can group logs together using [traces](/traces/traces).
+Logs are independent and by default are not linked to any other logs. You can group logs together using [traces](/traces/traces).
 
 ## Basic
 
 Logging is automatically handled for you when using the Montelo SDK.
 
-```typescript
-const montelo = new Montelo();
-
-await montelo.openai.chat.completions.create({ ... });
-```
-
-That is all you need to do to get started with logging. The logs will be sent to the Montelo servers, and you can view them in the Montelo dashboard.
-
-### Parameters
-
-When Montelo overrides the LLM Provider's sdk, we add a few parameters that you need to include in your input.
-
-This means you could log something like this:
+For example, when using the OpenAI SDK, you can log completions like this:
 
 ```typescript
 const montelo = new Montelo();
 
 await montelo.openai.chat.completions.create({
-  name: "Browse the web",
-  model: "gpt-4",
-  messages: [...],
-  extra: {
-    some: "extra data"
-  },
+  name: "A name for this completion",
+  // OpenAI parameters
+  ...
 });
 ```
+
+<Note>The `name` parameter is required. This is the name of the log, and it will be used to identify the log in the Montelo dashboard.</Note>
+
+For a complete list of parameters, see the [SDK documentation](/sdk/montelo-class).
+
+That is all you need to do to get started with logging.
 
 ## Manual
 
@@ -54,3 +45,4 @@ montelo.log({
 });
 ```
 
+For a complete list of parameters, see the [SDK documentation](/sdk/montelo-class).

@@ -19,8 +19,8 @@ const montelo = new Montelo();
 
 const trace = montelo.trace({ name: "Trace Name" });
 
-await trace.openai.chat.completions.create({ name:
-  "Browse search engine results",
+await trace.openai.chat.completions.create({
+  name: "Browse search engine results",
   ...,
 });
 await trace.log({ ... });

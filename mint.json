@@ -45,7 +45,6 @@
         {
           "group": "LLM Providers",
           "pages": [
-            "setup/multiple-llms",
             "setup/openai"
           ]
         }
