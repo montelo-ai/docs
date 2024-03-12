@@ -18,13 +18,11 @@ For example, when using the OpenAI SDK, you can log completions like this:
 const montelo = new Montelo();
 
 await montelo.openai.chat.completions.create({
-  name: "A name for this completion",
-  // OpenAI parameters
+  model: "gpt-3.5-turbo",
+  messages: [],
   ...
 });
 ```
-
-<Note>The `name` parameter is required. This is the name of the log, and it will be used to identify the log in the Montelo dashboard.</Note>
 
 For a complete list of parameters, see the [SDK documentation](/sdk/montelo-class).
 

@@ -99,12 +99,19 @@ import { Montelo } from "montelo";
 const montelo = new Montelo();
 
 await montelo.openai.chat.completions.create({
-  name: "A name for this completion",
-  ... // other OpenAI parameters
+  model: "gpt-4",
+  messages: [
+    {
+      role: "system",
+      content: "You are a helpful assistant.",
+    },
+    {
+      role: "user",
+      content: "What is the meaning of life?",
+    },
+  ]
 });
 ```
-
-<Note>The `name` parameter is a required field for Montelo for all completions. It is used to identify the completion in the Montelo dashboard.</Note>
 
 And that's it! After following these steps, you should have Montelo set up and ready to use.
 

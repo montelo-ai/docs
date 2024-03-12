@@ -19,15 +19,9 @@ const montelo = new Montelo();
 
 const trace = montelo.trace({ name: "Trace Name" });
 
-await trace.openai.chat.completions.create({
-  name: "Browse search engine results",
-  ...,
-});
-await trace.log({ ... });
-await trace.openai.chat.completions.create({
-  name: "Read a PDF",
-  ...,
-});
+await trace.openai.chat.completions.create(...);
+await trace.log(...);
+await trace.openai.chat.completions.create(...);
 ```
 
 <Note>These logs will be added to the trace with no hierarchy. For hierarchical traces, see `Nesting` below.</Note>
