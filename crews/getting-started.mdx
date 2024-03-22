@@ -1,0 +1,147 @@
+---
+title: Getting Started
+description: Getting started with Montelo Crews
+icon: play
+---
+
+In this simple tutorial we're building a crew comprised of a Researcher agent (with access to Google) and a blog post Writer agent. The crew has 2 tasks:
+
+1. Research the latest news on the topic which the user inputted
+2. Write up a structured blog post on these findings
+
+#### 1. Installation
+
+Install the `montelo` and `@montelo/crews` packages in your project.
+
+```sh Npm
+npm install montelo @montelo/crews
+```
+
+Now you have to setup you're montelo client ([guide](/general/quickstart)) and the model you want to use for the agents.
+As before you can use a `.env` file or just inject the Montelo & OpenAI keys directly inside the Montelo class instantiation
+
+<AccordionGroup>
+  <Accordion title="Using .env file" defaultOpen="true">
+    <CodeGroup>
+      ```typescript main.ts
+      import { Montelo } from "montelo";
+      import { Agent, Model, Tools } from "@montelo/crews";
+
+      const monteloClient = new Montelo();
+      const model = new Model({ monteloClient, modelName: "gpt-3.5-turbo" });
+
+      ````
+
+      ```dotenv .env
+      MONTELO_API_KEY=your-api-key
+      OPENAI_API_KEY=your-openai-key
+      ````
+    </CodeGroup>
+
+  </Accordion>
+
+  <Accordion title="Set API keys directly">
+    ```typescript main.ts
+      import { Montelo } from "montelo";
+      import { Agent, Model, Tools } from "@montelo/crews";
+
+      const monteloClient = new Montelo({
+        montelo: { apiKey: process.env.MONTELO_API_KEY },
+        openai: { apiKey: process.env.OPENAI_API_KEY },
+      });
+      const model = new Model({ monteloClient, modelName: "gpt-3.5-turbo" });
+
+      ````
+
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  Currently the `Model` class only supports OpenAI models. Support for more LLM
+  providers is coming soon!
+</Note>
+
+#### 2. Configure Your Agents
+
+To create your agents, use the `Agent` class to define:
+
+- The **name** of the agent
+- A description of the skillset and **role** of the agent.
+- The LLM **model** which powers the agent (defined above).
+- Any **tools** or functions you want to give them access to (we're using a pre-defined Google search tool).
+
+```typescript
+const researcher = new Agent({
+  name: "Researcher",
+  role: "You're a curious researcher. You love to find and explore the latest trends and news about {topic}.",
+  tools: [Tools.GoogleSearchTool],
+  model,
+});
+
+const writer = new Agent({
+  name: "Writer",
+  role: "You're a passionate blog writer. You write engaging and informative blog posts about {topic}.",
+  model,
+});
+```
+
+<Tip>
+  You can use variables in your prompts, such as `{topic}`, which you can then
+  pass in at runtime when you start the crew!
+</Tip>
+
+#### 3. Define the Tasks
+
+Define the objectives that your agents will complete, including the expected output format and the agent responsible for the task.
+
+```typescript
+const researchTask = new Task({
+  name: "Research Topic",
+  description: "Identify the latest news and trends about {topic}.",
+  expectedOutput: "A summary of all the findings about {topic}.",
+  agent: researcher,
+});
+
+const writeTask = new Task({
+  name: "Write Blog Post",
+  description: "Write an engaging and informative blog post about {topic}.",
+  expectedOutput:
+    "A structured blog post with clear subheadings and optimized with keywords for SEO.",
+  agent: writer,
+});
+```
+
+#### 4. Assemble the Crew
+
+Finally, combine the tasks to be completed by the crew, and watch the magic happen!
+You can also specify the process in which the tasks are completed, either [sequentially or managed](/).
+
+```typescript
+const crew = new Crew({
+  tasks: [researchTask, writeTask],
+  process: "sequential",
+});
+
+const result = await crew.start({
+  monteloClient,
+  promptInputs: { topic: "LLMs" },
+});
+```
+
+#### 5. Results
+
+This is the final generated output blog of the crew's work.
+
+<Frame type="glass" caption="The blog post written by the crew">
+  <img src="/assets/CrewsResult.png" />
+</Frame>
+
+<br />
+
+#### Dashboard Logs
+
+You can also see a detailed log of the agents progress and the output of each task on the Montelo [dashboard](https://app.montelo.ai/):
+
+<Frame caption="Crew logs on the Montelo dashboard">
+  <img src="/assets/CrewLogs.gif" />
+</Frame>

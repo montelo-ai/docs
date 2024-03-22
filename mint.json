@@ -61,6 +61,7 @@
       "group": "Crews & Agents",
       "pages": [
         "crews/introduction",
+        "crews/getting-started",
         {
           "group": "Core Concepts",
           "pages": [
