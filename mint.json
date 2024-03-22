@@ -58,6 +58,27 @@
       ]
     },
     {
+      "group": "Crews & Agents",
+      "pages": [
+        "crews/introduction",
+        {
+          "group": "Core Concepts",
+          "pages": [
+            "crews/concepts/agent",
+            "crews/concepts/task",
+            "crews/concepts/tool",
+            "crews/concepts/crew"
+          ]
+        },
+        {
+          "group": "Examples",
+          "pages": [
+            "crews/examples/trip_planner"
+          ]
+        }
+      ]
+    },
+    {
       "group": "SDK",
       "pages": [
         "sdk/montelo-class"
