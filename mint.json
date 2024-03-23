@@ -68,14 +68,8 @@
             "crews/concepts/agent",
             "crews/concepts/tool",
             "crews/concepts/task",
-            "crews/concepts/process",
-            "crews/concepts/crew"
-          ]
-        },
-        {
-          "group": "Examples",
-          "pages": [
-            "crews/examples/trip_planner"
+            "crews/concepts/crew",
+            "crews/concepts/process"
           ]
         }
       ]
