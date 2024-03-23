@@ -25,12 +25,11 @@ As before you can use a `.env` file or just inject the Montelo & OpenAI keys dir
     <CodeGroup>
       ```typescript main.ts
       import { Montelo } from "montelo";
-      import { Agent, Model, Tools } from "@montelo/crews";
+      import { Agent, Crew, Model, Task, Tools } from "@montelo/crews";
 
       const monteloClient = new Montelo();
       const model = new Model({ monteloClient, modelName: "gpt-3.5-turbo" });
-
-      ````
+      ```
 
       ```dotenv .env
       MONTELO_API_KEY=your-api-key
@@ -49,7 +48,7 @@ As before you can use a `.env` file or just inject the Montelo & OpenAI keys dir
         montelo: { apiKey: process.env.MONTELO_API_KEY },
         openai: { apiKey: process.env.OPENAI_API_KEY },
       });
-      const model = new Model({ monteloClient, modelName: "gpt-3.5-turbo" });
+      const GPT3Model = new Model({ monteloClient, modelName: "gpt-3.5-turbo" });
 
       ````
 
@@ -73,15 +72,15 @@ To create your agents, use the `Agent` class to define:
 ```typescript
 const researcher = new Agent({
   name: "Researcher",
-  role: "You're a curious researcher. You love to find and explore the latest trends and news about {topic}.",
+  role: "You are a curious researcher. You love to find and explore the latest trends and news about {topic}.",
   tools: [Tools.GoogleSearchTool],
-  model,
+  model: GPT3Model,
 });
 
 const writer = new Agent({
   name: "Writer",
-  role: "You're a passionate blog writer. You write engaging and informative blog posts about {topic}.",
-  model,
+  role: "You are a passionate blog writer. You write engaging and informative blog posts about {topic}.",
+  model: GPT3Model,
 });
 ```
 
@@ -114,7 +113,8 @@ const writeTask = new Task({
 #### 4. Assemble the Crew
 
 Finally, combine the tasks to be completed by the crew, and watch the magic happen!
-You can also specify the process in which the tasks are completed, either [sequentially or managed](/).
+This is where you set any variables in the `promptInputs` parameter.
+You can also specify the process in which the tasks are completed, either [sequentially or managed](/crews/concepts/process).
 
 ```typescript
 const crew = new Crew({
@@ -138,9 +138,9 @@ This is the final generated output blog of the crew's work.
 
 <br />
 
-#### Dashboard Logs
+#### 6. Monitoring & Debugging
 
-You can also see a detailed log of the agents progress and the output of each task on the Montelo [dashboard](https://app.montelo.ai/):
+You can also see a detailed log of the agents progress, costs and the output of each task on the Montelo [dashboard](https://app.montelo.ai/):
 
 <Frame caption="Crew logs on the Montelo dashboard">
   <img src="/assets/CrewLogs.gif" />

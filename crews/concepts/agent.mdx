@@ -1,5 +1,91 @@
 ---
 title: Agent
-description: Agent
 icon: robot
 ---
+
+#### What is an Agent?
+
+An LLM powered entity that has a specific role and set of skills to complete tasks by working with other agents.
+Here are some examples of agents:
+
+- **Researcher** that finds information on Google using the `GoogleSearchTool`
+- **Programmer** who takes requirements for a feature and writes the code for it
+- **Website Scraper** that takes a URL and certain information to look for on a website
+- **Evaluator** agent that looks at the output of other agents and rates whether or not it's a valid answer
+- **Planner** that creates a step-by-step plan for a task to make sure all the requirements are fulfilled
+
+#### Properties
+
+These are the properties that are available when creating an Agent.
+
+| Property                            | Type       | Description                                                                                  | Supports Variables |
+| ----------------------------------- | ---------- | -------------------------------------------------------------------------------------------- | ------------------ |
+| `name` <span class="red">\*</span>  | _string_   | The agent's name                                                                             | No                 |
+| `role` <span class="red">\*</span>  | _string_   | A description of the tasks this agent is best suited for within the crew                     | Yes                |
+| `model` <span class="red">\*</span> | _Model_    | The language model used by the agent to process and generate text                            | N/A                |
+| `systemMessage`                     | _string_   | Defines the goal this agent aims to achieve. This will guide its decision-making process     | Yes                |
+| `tools`                             | _Tool[]_   | Functions that the agent can use to perform tasks ([guide](/crews/concepts/task))            | No                 |
+| `stepCallback`                      | _Function_ | A function that is called after each step of the agent. E.g. you can use this to log outputs | N/A                |
+
+#### Creating an Agent
+
+To create an agent, start by defining the LLM model you want to power it with.
+Currently, only OpenAI models are supported, but support for other providers is coming soon.
+
+Define the OpenAI model name and pass in the Montelo client as a parameter.
+
+```typescript Model
+const GPT4Model = new Model({ monteloClient, modelName: "gpt-4-turbo" });
+```
+
+Now, instantiate the Agent class with its configuration. Here is an example using all the properties:
+
+```typescript Agent
+const researcher = new Agent({
+  name: "Researcher",
+  role: "You're a curious researcher. You love to find and explore the latest trends and news about {topic}.",
+  model: GPT4Model,
+  // (Optional) Giving it the ability to search Google
+  tools: [Tools.GoogleSearchTool],
+  // (Optional) System message
+  systemMessage:
+    "Format the findings in an easy-to-understand way for sharing with others.",
+  // (Optional) Using the callback to log the outputs
+  stepCallback: async (output) => {
+    console.log(output);
+  },
+});
+```
+
+<Tip>
+  Define variables in your prompts using curly braces, such as `{topic}`, which
+  can be passed in at runtime when you start the crew!
+</Tip>
+
+You can now use this agent in any Crew!
+
+#### FAQs & Tips
+
+<AccordionGroup>
+    <Accordion title="What's the difference between the role and systemMessage?">
+        Both the `systemMessage` and `role` are used in the system message to the model.
+        However, the difference is that the `role` is provided to the `Manager` agent in a managed process to determine the right agent for a task.
+
+        The `systemMessage` offers additional, private information or instructions to the agent.
+
+        NOTE: The user message to the model is dynamically generated based on the task assigned to the agent.
+    </Accordion>
+
+    <Accordion title="What tools can I use? Can I build my own?">
+        Yes, you can build your own or use one of our pre-built tools!
+        Check out the [Tools](/crews/concepts/tool) docs for all the
+        supported tools and instructions on how to build your own.
+    </Accordion>
+
+    <Accordion title="Can I use different models for different agents in the same crew?">
+        Absolutely! We actually recommend doing this for keeping costs down and improving the performance and accuracy of your application.
+
+        You should use smaller and cheaper models for simple tasks (e.g. GPT-3), and bigger models for more complex tasks where accuracy is very important (e.g. GPT-4).
+    </Accordion>
+
+</AccordionGroup>

@@ -68,6 +68,7 @@
             "crews/concepts/agent",
             "crews/concepts/task",
             "crews/concepts/tool",
+            "crews/concepts/process",
             "crews/concepts/crew"
           ]
         },
