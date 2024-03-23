@@ -19,7 +19,7 @@
   "topbarLinks": [
     {
       "name": "Community",
-      "url": "https://join.slack.com/t/montelo/shared_invite/zt-2e2n0d68m-1Ib_qDeGavkrBIxFaIpjgg"
+      "url": "https://discord.gg/ZBjGgJkF"
     },
     {
       "name": "Blog",
@@ -97,6 +97,7 @@
     "website": "https://montelo.ai",
     "twitter": "https://twitter.com/monteloai",
     "github": "https://github.com/montelo-ai",
+    "discord": "https://discord.gg/ZBjGgJkF",
     "slack": "https://join.slack.com/t/montelo/shared_invite/zt-2e2n0d68m-1Ib_qDeGavkrBIxFaIpjgg"
   }
 }
