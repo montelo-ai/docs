@@ -18,29 +18,33 @@ Here are some examples of agents:
 
 These are the properties that are available when creating an Agent.
 
-| Property                            | Type       | Description                                                                                  | Supports Variables |
-| ----------------------------------- | ---------- | -------------------------------------------------------------------------------------------- | ------------------ |
-| `name` <span class="red">\*</span>  | _string_   | The agent's name                                                                             | No                 |
-| `role` <span class="red">\*</span>  | _string_   | A description of the tasks this agent is best suited for within the crew                     | Yes                |
-| `model` <span class="red">\*</span> | _Model_    | The language model used by the agent to process and generate text                            | N/A                |
-| `systemMessage`                     | _string_   | Defines the goal this agent aims to achieve. This will guide its decision-making process     | Yes                |
-| `tools`                             | _Tool[]_   | Functions that the agent can use to perform tasks ([guide](/crews/concepts/task))            | No                 |
-| `stepCallback`                      | _Function_ | A function that is called after each step of the agent. E.g. you can use this to log outputs | N/A                |
+| Property                            | Type       | Description                                                                                        | Variables |
+| ----------------------------------- | ---------- | -------------------------------------------------------------------------------------------------- | --------- |
+| `name` <span class="red">\*</span>  | _String_   | The agent's name                                                                                   | No        |
+| `role` <span class="red">\*</span>  | _String_   | A description of the tasks this agent is best suited for within the crew                           | Yes       |
+| `model` <span class="red">\*</span> | _Model_    | The language model used by the agent to process and generate text                                  | N/A       |
+| `systemMessage`                     | _String_   | Defines the goal this agent aims to achieve. This will guide its decision-making process           | Yes       |
+| `tools`                             | _Tool[]_   | Functions that the agent can use to perform tasks ([tools guide](/crews/concepts/tool))            | No        |
+| `callback`                          | _Function_ | A function that is called when the agent is done with a task. E.g. you can use this to log outputs | N/A       |
+
+<span class="text-sm">
+  <span class="red">\*</span> Required properties
+</span>
 
 #### Creating an Agent
 
 To create an agent, start by defining the LLM model you want to power it with.
 Currently, only OpenAI models are supported, but support for other providers is coming soon.
 
-Define the OpenAI model name and pass in the Montelo client as a parameter.
+Here is an example using all the properties:
 
 ```typescript Model
+import { Agent, Model, Tools } from "@montelo/crews";
+
+// Define the OpenAI model name and pass in the Montelo client as a parameter
 const GPT4Model = new Model({ monteloClient, modelName: "gpt-4-turbo" });
-```
 
-Now, instantiate the Agent class with its configuration. Here is an example using all the properties:
-
-```typescript Agent
+// Instantiate the Agent class with its configuration
 const researcher = new Agent({
   name: "Researcher",
   role: "You're a curious researcher. You love to find and explore the latest trends and news about {topic}.",
@@ -62,7 +66,7 @@ const researcher = new Agent({
   can be passed in at runtime when you start the crew!
 </Tip>
 
-You can now use this agent in any Crew!
+You can now use this agent in for any Task or Crew!
 
 #### FAQs & Tips
 

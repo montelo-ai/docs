@@ -66,8 +66,8 @@
           "group": "Core Concepts",
           "pages": [
             "crews/concepts/agent",
-            "crews/concepts/task",
             "crews/concepts/tool",
+            "crews/concepts/task",
             "crews/concepts/process",
             "crews/concepts/crew"
           ]
