@@ -11,10 +11,10 @@ In this simple tutorial we're building a crew comprised of a Researcher agent (w
 
 #### 1. Installation
 
-Install the `montelo` and `@montelo/crews` packages in your project.
+Install the `montelo` package in your project.
 
 ```sh Npm
-npm install montelo @montelo/crews
+npm install montelo
 ```
 
 Now you have to setup you're montelo client ([guide](/general/quickstart)) and the model you want to use for the agents.
@@ -24,8 +24,7 @@ As before you can use a `.env` file or just inject the Montelo & OpenAI keys dir
   <Accordion title="Using .env file" defaultOpen="true">
     <CodeGroup>
       ```typescript main.ts
-      import { Montelo } from "montelo";
-      import { Agent, Crew, Model, Task, Tools } from "@montelo/crews";
+      import { Agent, Crew, Model, Montelo, Task, Tools } from "montelo";
 
       const monteloClient = new Montelo();
       const model = new Model({ monteloClient, modelName: "gpt-3.5-turbo" });
@@ -41,8 +40,7 @@ As before you can use a `.env` file or just inject the Montelo & OpenAI keys dir
 
   <Accordion title="Set API keys directly">
     ```typescript main.ts
-      import { Montelo } from "montelo";
-      import { Agent, Model, Tools } from "@montelo/crews";
+      import { Agent, Model, Tools } from "montelo";
 
       const monteloClient = new Montelo({
         montelo: { apiKey: process.env.MONTELO_API_KEY },

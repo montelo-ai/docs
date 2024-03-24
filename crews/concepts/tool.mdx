@@ -17,10 +17,10 @@ Examples of utilities achievable through tools include:
 #### Using Tools
 
 Tools are very easy to use! Whether you're using custom tools, or the tools Montelo provides, simply include it as a parameter in the agent's configuration.
-Here is an example using the `GoogleSearchTool` from the `@montelo/crews` package:
+Here is an example using the `GoogleSearchTool` from the `montelo` package:
 
 ```typescript
-import { Agent, Tools } from "@montelo/crews";
+import { Agent, Tools } from "montelo";
 
 const someResearchAgent = new Agent({
   tools: [Tools.GoogleSearchTool],
@@ -59,7 +59,7 @@ npm i --save zod
 
 ```typescript
 import { z } from "zod";
-import { Tool } from "@montelo/crews";
+import { Tool } from "montelo";
 
 // Input Schema
 const FunctionInput = z.object({
