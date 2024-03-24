@@ -70,18 +70,6 @@
           ]
         }
       ]
-    },
-    {
-      "group": "SDK",
-      "pages": [
-        "sdk/montelo-class"
-      ]
-    }
-  ],
-  "tabs": [
-    {
-      "name": "SDK Reference",
-      "url": "sdk"
     }
   ],
   "footerSocials": {
