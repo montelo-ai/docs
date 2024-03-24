@@ -5,16 +5,86 @@ icon: people-group
 
 #### What is a Crew?
 
-...
+A Crew represents a collaborative group of agents working together to achieve a set of tasks.
+Each crew defines the strategy for task execution, agent collaboration, and the overall workflow using the `process` parameter.
 
 #### Properties
 
-...
+| Property                                      | Type       | Description                                                  | Guide                              |
+| --------------------------------------------- | ---------- | ------------------------------------------------------------ | ---------------------------------- |
+| `name`                                        | _String_   | The name of the crew. Only used for the Montelo dashboard    | ---                                |
+| `agents` <span class="red">\*</span>          | _Agent[]_  | list of the agents in the crew                               | [agents](/crews/concepts/agent)    |
+| `tasks` <span class="red">\*</span>           | _String_   | A list of tasks assigned to the crew                         | [tasks](/crews/concepts/task)      |
+| `process` <span class="red">\*</span>         | _Process_  | The process that the crew follows. "sequential" or "managed" | [process](/crews/concepts/process) |
+| `tools`                                       | _Tool[]_   | A list of tools that the crew has access to                  | [tools](/crews/concepts/tool)      |
+| `managerModel` <span class="orange">\*</span> | _Model_    | the model provider for the manager                           | ---                                |
+| `stepCallback`                                | _Function_ | A function that is called after each step of every agent     | ---                                |
+
+<div class="text-sm">
+  <span class="red">\*</span> Required properties
+
+  <span class="orange">\*</span> Required for a `managed` process
+</div>
 
 #### Creating a Crew
 
-...
+Depending on the `process` you would like the crew to adhere to, there's a slightly different way to define the crew.
+
+Here is an example:
+
+<CodeGroup>
+```typescript Sequential
+import { Crew } from "@montelo/crews";
+
+// Define the agents, tasks and tools...
+
+const crew = new Crew({
+  name: "Cool Crew",
+  process: "sequential",
+  agents: [agent1, agent2],
+  tasks: [task1, task2],
+  tools: [SomeRandomTool],
+  stepCallback: async (output, agentName) => {
+    console.log(`[${agentName}] Agent Done: ${output}`);
+  },
+});
+```
+
+```typescript Managed
+import { Crew, Model } from "@montelo/crews";
+
+// Define the agents, tasks and tools...
+
+// Define the OpenAI model for the manager
+const GPT4Model = new Model({ monteloClient, modelName: "gpt-4-turbo" });
+
+const crew = new Crew({
+  name: "Cool Crew",
+  process: "managed",
+  managerModel: GPT4Model,
+  agents: [agent1, agent2],
+  tasks: [task1, task2],
+  tools: [SomeRandomTool],
+  stepCallback: async (output, agentName) => {
+    console.log(`[${agentName}] Agent Done: ${output}`);
+  },
+});
+````
+
+</CodeGroup>
 
 #### Starting The Crew
 
-...
+Once your crew is assembled, initiate the workflow with the `start()` method. This starts the execution process according to the defined process flow.
+
+<Note>
+  This is where you pass in any variables that you have defined in the Agent and
+  Task prompts (e.g. `topic`).
+</Note>
+
+```typescript
+const output = await await crew.start({
+  monteloClient,
+  promptInputs: { topic: "Cats" },
+});
+```
