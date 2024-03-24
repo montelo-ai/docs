@@ -5,12 +5,106 @@ icon: hammer
 
 #### What is a Tool?
 
-...
+A tool is a function that extends the capabilities of an agent, enabling functionalities such as executing code, accessing the internet, and integrating with external applications, and much more.
 
-#### Available Tools
+Examples of utilities achievable through tools include:
 
-...
+- Reading and writing files
+- Searching within a PDF file
+- Scraping web content
+- Integrating with CRMs
+
+#### Using Tools
+
+Tools are very easy to use! Whether you're using custom tools, or the tools Montelo provides, simply include it as a parameter in the agent's configuration.
+Here is an example using the `GoogleSearchTool` from the `@montelo/crews` package:
+
+```typescript
+import { Agent, Tools } from "@montelo/crews";
+
+const someResearchAgent = new Agent({
+  tools: [Tools.GoogleSearchTool],
+  // other params...
+});
+```
+
+#### Available Montelo Tools
+
+We have our own set of tools we offer you, and are constantly building more:
+
+| Tool                                       | Description                                        | Link to Guide  |
+| ------------------------------------------ | -------------------------------------------------- | -------------- |
+| `DelegateTask` <span class="red">\*</span> | Allows the agent to delegate tasks to other agents | ---            |
+| `AskQuestion` <span class="red">\*</span>  | Allows the agent to ask questions to other agents  | ---            |
+| `GoogleSearchTool`                         | Provides access to Google Search                   | [read more](/) |
+
+<span class="text-sm">
+  <span class="red">\*</span> These tools are built into all agents by default.
+</span>
 
 #### Create your own Tool
 
-...
+To create your own tool you must first install zod, and use it to define the input schema for your tool.
+You can read more on these schemas in the [Zod Documentation](https://zod.dev/?id=basic-usage).
+
+In the following example, we create a simple tool that accepts a location and a temperature unit parameters, then returns a weather summary as a string.
+
+**1. Install Zod**
+
+```sh
+npm i --save zod
+```
+
+**2. Define input schema**
+
+```typescript
+import { z } from "zod";
+import { Tool } from "@montelo/crews";
+
+// Input Schema
+const FunctionInput = z.object({
+  // Make sure to describe each parameter
+  location: z.string().describe("The city, e.g San Francisco."),
+  unit: z.enum(["Celsius", "Fahrenheit"]).describe("The unit of temperature."),
+});
+type TFunctionInput = z.infer<typeof FunctionInput>; // Converts schema into TS type
+```
+
+**3. Write the tool**
+
+```typescript
+// Make sure you use the `TFunctionInput` type for params
+const getCurrentWeather = async (params: TFunctionInput): Promise<string> => {
+  // This is where you'd fetch real weather data
+  return `The weather in ${params.location} is currently 22 degrees ${params.unit}.`;
+};
+
+// Tool
+export const GetCurrentWeatherTool = new Tool({
+  name: "GetCurrentWeather",
+  function: getCurrentWeather,
+  schema: FunctionInput,
+  description: "Get the current weather in a given location.",
+});
+```
+
+<Warning>
+  Avoid using spaces or special characters in tool names to prevent issues
+  during tool calling from the model.
+</Warning>
+<Tip>
+  Providing clear descriptions for your tool and its parameters is crucial.
+  These descriptions guide the agent in determining the tool's applicability to
+  its task.
+</Tip>
+
+#### FAQs & Tips
+
+<AccordionGroup>
+  <Accordion title="Can I request new tools to be built by Montelo?">
+    Yes absolutely! Just reach out to us in our
+    [discord](https://discord.gg/ZBjGgJkF) or
+    [slack](https://join.slack.com/t/montelo/shared_invite/zt-2e2n0d68m-1Ib_qDeGavkrBIxFaIpjgg)
+    channel and we'll try to build them as quickly as possible.
+  </Accordion>
+</AccordionGroup>

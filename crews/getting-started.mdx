@@ -118,6 +118,7 @@ You can also specify the process in which the tasks are completed, either [seque
 
 ```typescript
 const crew = new Crew({
+  agents: [researcher, writer],
   tasks: [researchTask, writeTask],
   process: "sequential",
 });

@@ -23,14 +23,15 @@ Here are some examples of tasks:
 
 These are the properties that are available when creating a Task.
 
-| Property                                    | Type       | Description                                                                                 | Variables |
-| ------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------- | --------- |
-| `name` <span class="red">\*</span>          | _String_   | The task's name                                                                             | No        |
-| `description` <span class="red">\*</span>   | _String_   | A clear, concise description of what the task entails                                       | Yes       |
-| `expectedOutput`<span class="red">\*</span> | _String_   | A detailed description of the task's expected results and output format.                    | Yes       |
-| `agent`                                     | _Agent_    | Specify which agent is responsible for the task ([agent guide](/crews/concepts/agent))      | N/A       |
-| `tools`                                     | _Tool[]_   | Functions that the agent fulfilling this task can use ([tools guide](/crews/concepts/tool)) | No        |
-| `callback`                                  | _Function_ | A function that is executed upon task completion (includes the output of the task)          | N/A       |
+| Property                                    | Type       | Description                                                                                                | Variables |
+| ------------------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------- | --------- |
+| `name` <span class="red">\*</span>          | _String_   | The task's name                                                                                            | No        |
+| `description` <span class="red">\*</span>   | _String_   | A clear, concise description of what the task entails                                                      | Yes       |
+| `expectedOutput`<span class="red">\*</span> | _String_   | A detailed description of the task's expected results and output format.                                   | Yes       |
+| `agent`                                     | _Agent_    | Specify which agent is responsible for the task ([agent guide](/crews/concepts/agent))                     | N/A       |
+| `tools`                                     | _Tool[]_   | Functions that the agent fulfilling this task can use ([tools guide](/crews/concepts/tool))                | No        |
+| `callback`                                  | _Function_ | A function that is executed upon task completion (includes the output of the task)                         | N/A       |
+| `allowDelegation`                           | _boolean_  | Allows the assigned agent to delegate tasks to other agents if they're better suited for it. (Recommended) | N/A       |
 
 <span class="text-sm">
   <span class="red">\*</span> Required properties
@@ -59,6 +60,8 @@ const coldEmailTask = new Task({
     5. Call-to-action to schedule a demo or learn more
     6. Professional sign-off`,
   agent: emailWriter,
+  // (Optional)
+  allowDelegation: true,
   // (Optional) Example tools to allow the agent to find out more about the product and customer
   tools: [CustomerDatabaseTool, ProductFeaturesTool],
   // (Optional) An example callback where we log potentially bad emails
@@ -85,5 +88,10 @@ When we start the crew you will have to pass in the variables we're using in the
 #### FAQs & Tips
 
 <AccordionGroup>
-  <Accordion title="Question">Answer</Accordion>
+  <Accordion title="What's the difference between defining the tools on the Task vs the Agent?">
+    The tools defined on the task will be combined with any tools the assigned
+    agent has access to. The difference is setting the tools on the Task means
+    no matter what agent is assigned to it, they'll have access to that tool.
+    <br /> This is especially useful for a `managed` process!
+  </Accordion>
 </AccordionGroup>
