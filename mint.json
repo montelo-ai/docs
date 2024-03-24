@@ -68,6 +68,12 @@
             "crews/concepts/crew",
             "crews/concepts/process"
           ]
+        },
+        {
+          "group": "Tools",
+          "pages": [
+            "crews/tools/GoogleSearchTool"
+          ]
         }
       ]
     }
