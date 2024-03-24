@@ -1,0 +1,76 @@
+---
+title: Datapoints
+description: A datapoint is a single input/expected output pair belonging to a dataset.
+icon: circle-dot
+---
+
+## Concept
+Each datapoint represents a single input-output pair that adheres to the schema defined by the [dataset](/datasets/datasets) it belongs to.
+
+The input represents the data that will be provided to the LLM during evaluation, while the expected output represents the desired result.
+
+For example, consider a dataset with the following schema:
+
+```typescript
+Input Schema:
+{
+  topic: "string"
+}
+
+Expected output Schema:
+{
+  article: "string"
+}
+```
+
+A datapoint in this dataset could look like this:
+
+```json
+{
+  "input": {
+    "topic": "The importance of AI in modern society"
+  },
+  "expectedOutput": {
+    "article": "AI has become increasingly important in modern society ..."
+  }
+}
+```
+
+## Creating a Datapoint
+
+You can create a datapoint using the SDK. This is useful when you have a local dataset that you want to upload to Montelo.
+
+We also worked really hard on making sure that the SDK is type-safe, so you can be sure that the data you're sending is correct.
+
+Here's an example of how you can create a datapoint using the SDK:
+
+```typescript
+const montelo = new Montelo();
+
+// input and output types for the dataset
+type DInput = { topic: string };
+type DOutput = { article: string };
+
+// some local dataset
+const localDataset: Array<{ input: DInput; expectedOutput: DOutput }> = [
+  {
+    input: { topic: "AI in healthcare" },
+    expectedOutput: { article: "Some article about AI in healthcare" },
+  },
+];
+
+for (const { input, expectedOutput } of localDataset) {
+  await montelo.datapoints.create({
+    dataset: "dataset-slug", // you can get this from the UI
+    input,
+    expectedOutput,
+  });
+}
+```
+
+## Code Snippet
+You can also get a code snippet from the UI that you can use to create a datapoint using the SDK.
+
+<Frame type="glass">
+  <img src="/assets/DatasetViewCode.gif"/>
+</Frame>

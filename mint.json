@@ -39,22 +39,19 @@
       ]
     },
     {
-      "group": "Setup",
+      "group": "Traces & Logs",
       "pages": [
-        "setup/montelo",
-        {
-          "group": "LLM Providers",
-          "pages": [
-            "setup/openai"
-          ]
-        }
+        "traces/traces",
+        "traces/logs"
       ]
     },
     {
-      "group": "Traces & Logs",
+      "group": "Datasets & Experiments",
       "pages": [
-        "traces/logs",
-        "traces/traces"
+        "datasets/datasets",
+        "datasets/datapoints",
+        "experiments/experiments",
+        "experiments/runs"
       ]
     },
     {

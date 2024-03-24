@@ -1,0 +1,80 @@
+---
+title: Experiments
+description: Evaluate your LLMs on datasets to measure their performance.
+icon: flask
+---
+
+Experiments allow you to evaluate the performance of your LLMs on specific [datasets](/datasets/datasets).
+By running experiments, you can gain insights into how well your models perform on various tasks and identify areas for improvement.
+
+## Concept
+
+To create an experiment, you need to provide a dataset and a runner function.
+The runner function defines how the LLM should process each datapoint in the dataset.
+
+<Note>
+  The implementation of the runner is left to you, so you can use any LLM or API (even non-Montelo ones) to generate the
+  output based on the input!
+</Note>
+
+Here's an example of creating an experiment using the Montelo SDK:
+
+```typescript
+const montelo = new Montelo();
+
+// Define the input and output types for the dataset
+type DInput = { topic: string };
+type DOutput = { article: string };
+
+// Implement the runner function
+const anthropicChat = async (input: DInput): Promise<DOutput> => {
+  const result = await montelo.anthropic.messages.create({
+    model: "claude-3-sonnet-20240229",
+    messages: [
+      {
+        role: "user",
+        content: `Write a one liner about the given content. Topic: ${input.topic}`,
+      },
+    ],
+    max_tokens: 100,
+  });
+
+  return { article: result.content[0].text };
+};
+
+// Create and run the experiment
+await montelo.experiments.createAndRun({
+  name: "AI Articles w/ Anthropic",
+  description: "Find articles about AI topics using Anthropic's LLM.",
+  dataset: "topic-datasets",
+  runner: anthropicChat,
+});
+```
+
+In this example:
+1. We define the input and output types (`DInput` and `DOutput`) based on the dataset schema.
+2. We implement the runner function `anthropicChat` that takes an input of type `DInput` and returns a promise of type `DOutput`. Inside the function, we use the Anthropic API to generate an article based on the given topic.
+3. We create and run the experiment using `montelo.experiments.createAndRun()`, providing the experiment details and the runner function.
+
+## Running an Experiment
+
+When you run an experiment, Montelo executes the runner function for each datapoint in the specified dataset. The runner function processes the input and generates the corresponding output.
+
+Montelo keeps track of the experiment progress and provides real-time updates on the number of datapoints processed and the overall status of the experiment.
+
+## Analyzing Results
+
+Once an experiment is completed, you can analyze the results to evaluate the performance of your LLM. Montelo provides various metrics and visualizations to help you understand how well your model performed on the dataset.
+
+You can access the experiment results through the Montelo UI.
+
+<Frame type="glass">
+  <img src="/assets/ExperimentResult.png" alt="Experiment Result"/>
+</Frame>
+
+By analyzing the experiment results, you can identify strengths and weaknesses of your LLM and make informed decisions on how to improve its performance.
+
+<Note>
+  We're working on adding evaluators to help you analyze the results of your experiments. Stay tuned for updates!
+</Note>
+

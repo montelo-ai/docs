@@ -1,0 +1,70 @@
+---
+title: Datasets
+description: A dataset is a collection of datapoints that adhere to a specific schema.
+icon: database
+---
+
+Datasets are integral to evaluating LLMs in Montelo.
+You can create datasets to evaluate the performance of your LLMs on specific tasks.
+
+## Concept
+
+A dataset is a collection of [datapoints](/datasets/datapoints) that adhere to an input and expected output schema. For example,
+consider a dataset where the input is a topic of interest, and the expected output is an article about that topic:
+
+```typescript
+Input Schema:
+{
+  topic: "string"
+}
+
+Expected output Schema:
+{
+  article: "string"
+}
+```
+
+Every datapoint in this dataset will have a `topic` field in the input and an `article` field in the output.
+
+You can then run [experiments](/experiments/experiments) against this dataset to evaluate the performance of your LLMs.
+
+## Schema Types
+
+The dataset schema is an object of key-value pairs, where the key is the field name and the value is the field type.
+
+Montelo supports the following field types:
+
+- `string`
+- `number`
+- `boolean`
+- `array`
+- `object`
+
+## Creating a Dataset
+
+### Via the SDK
+
+This will create a new dataset in the environment for the API key used.
+
+```typescript
+const montelo = new Montelo();
+
+const dataset = await montelo.datasets.create({
+  name: "Article Dataset",
+  description: "Datasets for AI articles",
+  inputSchema: {
+    topic: "string",
+  },
+  outputSchema: {
+    article: "string",
+  },
+});
+```
+
+### Via the UI
+
+You can create a dataset via the UI by navigating to the Datasets page and clicking on the `Create Dataset` button.
+
+<Frame type="glass">
+  <img src="/assets/CreateDataset.png"/>
+</Frame>

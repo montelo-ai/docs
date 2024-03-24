@@ -1,0 +1,29 @@
+---
+title: Runs
+description: A run represents the execution of a single datapoint within an experiment.
+icon: circle-play
+---
+
+## Concept
+A run represents the execution of a single datapoint from a dataset within an [experiment](/experiments/experiments). A `runner` function processes the input data
+and generates an output that adheres to the dataset's schema.
+
+Runs are important for diagnosing model performance at a granular level, allowing developers to effectively debug their systems
+and architectures.
+
+## Creating a Run
+
+A run is automatically created for you when you execute an experiment via `montelo.experiments.createAndRun`.
+
+Each run is tied to the one input of the `runner` function and the output it generates.
+
+## Analyzing Runs
+Analyzing runs provides valuable feedback on the model's performance, helping you understand:
+
+- How closely the actual outputs match the expected outputs.
+- Any errors in the system's responses.
+- Areas for improvement in the system's architecture.
+
+<Frame type="glass">
+  <img src="/assets/Run.png" alt="Runs Overview"/>
+</Frame>
