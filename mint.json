@@ -1,10 +1,12 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "Montelo Documentation",
-  "logo": "/assets/logo.svg",
+  "logo": {
+    "light": "/assets/logo_light.svg",
+    "dark": "/assets/logo_dark.svg"
+  },
   "modeToggle": {
-    "default": "dark",
-    "isHidden": true
+    "default": "dark"
   },
   "favicon": "/assets/favicon.png",
   "colors": {
