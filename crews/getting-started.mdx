@@ -27,7 +27,7 @@ As before you can use a `.env` file or just inject the Montelo & OpenAI keys dir
       import { Agent, Crew, Model, Montelo, Task, Tools } from "montelo";
 
       const monteloClient = new Montelo();
-      const model = new Model({ monteloClient, modelName: "gpt-3.5-turbo" });
+      const GPT3Model = new Model({ monteloClient, modelName: "gpt-3.5-turbo" });
       ```
 
       ```dotenv .env
