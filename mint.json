@@ -86,6 +86,12 @@
       ]
     },
     {
+      "group": "Introduction",
+      "pages": [
+        "guides/intro"
+      ]
+    },
+    {
       "group": "Integrations",
       "pages": [
         "guides/vercel-ai-sdk"
