@@ -1,0 +1,98 @@
+---
+title: Vercel AI SDK
+description: Use Montelo to add logging and tracing to your applications built with the [Vercel AI SDK](https://sdk.vercel.ai/docs).
+---
+
+<Frame type="glass">
+  <img src="/assets/guides/vercel-ai-sdk-banner.png" alt="Vercel AI SDK Banner"/>
+</Frame>
+
+## Quick Setup
+
+Unlike other monitoring solutions, like █████████ and █████████ 🤐, you can integrate Montelo with the Vercel AI SDK with
+just **one line of code**.
+
+<Steps>
+  <Step title="Create an account">
+    Head over to the [Montelo App](https://app.montelo.io) and create an **free** account.
+  </Step>
+  <Step title="Get your API Key">
+    <Frame type="glass">
+      <img src="/assets/ApiKey.gif" alt="Api Key"/>
+    </Frame>
+  </Step>
+  <Step title="Install the Montelo SDK">
+    ```bash
+    npm install montelo
+    ```
+  </Step>
+  <Step title="Replace all LLM constructors with Montelo">
+    ```diff
+    - import OpenAI from "openai";
+    - import Anthropic from "@anthropic-ai/sdk";
+    - import MistralClient from "@mistralai/mistralai";
+    + import { Montelo } from "montelo";
+
+    - const openai = new OpenAI();
+    - const anthropic = new Anthropic();
+    - const mistral = new MistralClient();
+    + const { openai, anthropic, mistral } = new Montelo();
+    ```
+
+    And that's it! You're now sending logs and traces to Montelo. 🎉
+  </Step>
+</Steps>
+
+
+## Tracing
+
+It's really easy to add tracing to your Vercel AI SDK application with Montelo.
+
+Simply start a new trace at the top of your route handler:
+
+```typescript api/chat/route.ts
+import { Montelo } from "montelo";
+
+const { openai } = new Montelo();
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  const trace = montelo.trace({ name: "Chat" });
+
+  const res1 = await trace.openai.chat.completions.create({
+    model: "gpt-4",
+    messages,
+    stream: true,
+  });
+
+  const res2 = await trace.anthropic.messages.create({
+    model: "claude-3-sonnet-20240229",
+    messages,
+    max_tokens: 100,
+    stream: true,
+  });
+}
+```
+
+Both `openai` and `anthropic` logs will be grouped together under the same trace, making it easy to see the full picture
+of what's happening in your application.
+
+The `trace` object is used to group together all the logs that are part of the same trace. It exposes the same methods as
+`new Montelo()`, so you can use it to make API calls.
+
+Check out the documentation on [Tracing](docs/traces/traces) for more information.
+
+### Trace ID
+
+The trace ID is a unique identifier for the trace. It is used to group together all the logs that are part of the same trace.
+
+If you'd like to use a custom trace ID, like a chat or session ID, you can pass in `id` to the `trace` method:
+
+```typescript
+const trace = montelo.trace({ name: "Chat", id: "chat-123" });
+```
+
+## Full Example
+
+You can find the full example in our `examples` repo [here](https://github.com/montelo-org/examples/tree/main/nextjs/starter).

@@ -20,63 +20,81 @@
   },
   "topbarLinks": [
     {
-      "name": "Community",
-      "url": "https://discord.gg/ZBjGgJkF"
+      "name": "GitHub",
+      "url": "https://github.com/montelo-org/montelo"
     },
     {
-      "name": "Blog",
-      "url": "https://blog.montelo.ai"
+      "name": "Discord",
+      "url": "https://discord.gg/ZBjGgJkF"
     }
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
     "url": "https://app.montelo.ai"
   },
+  "tabs": [
+    {
+      "name": "Guides",
+      "url": "guides"
+    }
+  ],
   "navigation": [
     {
       "group": "Introduction",
       "pages": [
-        "general/welcome",
-        "general/quickstart"
+        "docs/general/welcome",
+        "docs/general/quickstart"
       ]
     },
     {
       "group": "Traces & Logs",
       "pages": [
-        "traces/traces",
-        "traces/logs"
+        "docs/traces/traces",
+        "docs/traces/logs"
       ]
     },
     {
       "group": "Datasets & Experiments",
       "pages": [
-        "datasets/datasets",
-        "datasets/datapoints",
-        "experiments/experiments",
-        "experiments/runs"
+        "docs/datasets/datasets",
+        "docs/datasets/datapoints",
+        "docs/experiments/experiments",
+        "docs/experiments/runs"
       ]
     },
     {
       "group": "Crews & Agents",
       "pages": [
-        "crews/introduction",
-        "crews/getting-started",
+        "docs/crews/introduction",
+        "docs/crews/getting-started",
         {
           "group": "Core Concepts",
           "pages": [
-            "crews/concepts/agent",
-            "crews/concepts/tool",
-            "crews/concepts/task",
-            "crews/concepts/crew",
-            "crews/concepts/process"
+            "docs/crews/concepts/agent",
+            "docs/crews/concepts/tool",
+            "docs/crews/concepts/task",
+            "docs/crews/concepts/crew",
+            "docs/crews/concepts/process"
           ]
         },
         {
           "group": "Tools",
           "pages": [
-            "crews/tools/GoogleSearchTool"
+            "docs/crews/tools/GoogleSearchTool"
           ]
         }
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "guides/vercel-ai-sdk"
+      ]
+    },
+    {
+      "group": "Crews",
+      "pages": [
+        "guides/crews"
       ]
     }
   ],
@@ -85,5 +103,10 @@
     "twitter": "https://twitter.com/monteloai",
     "github": "https://github.com/montelo-ai",
     "discord": "https://discord.gg/ZBjGgJkF"
+  },
+  "analytics": {
+    "posthog": {
+      "apiKey": "phc_iZ0VLonpOMLBi7z9cljlvKHXODB1udna8oQbtFDlBbQ"
+    }
   }
 }
