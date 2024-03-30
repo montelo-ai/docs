@@ -22,7 +22,7 @@ These are the properties that are available when creating an Agent.
 | ----------------------------------- | ---------- | -------------------------------------------------------------------------------------------------- | --------- |
 | `name` <span class="red">\*</span>  | _String_   | The agent's name                                                                                   | No        |
 | `role` <span class="red">\*</span>  | _String_   | A description of the tasks this agent is best suited for within the crew                           | Yes       |
-| `model` <span class="red">\*</span> | _Model_    | The language model used by the agent to process and generate text                                  | N/A       |
+| `model` <span class="red">\*</span> | _String_   | The OpenAI model used by the agent to process and generate text                                    | N/A       |
 | `systemMessage`                     | _String_   | Defines the goal this agent aims to achieve. This will guide its decision-making process           | Yes       |
 | `tools`                             | _Tool[]_   | Functions that the agent can use to perform tasks ([tools guide](/crews/concepts/tool))            | No        |
 | `callback`                          | _Function_ | A function that is called when the agent is done with a task. E.g. you can use this to log outputs | N/A       |
@@ -33,22 +33,16 @@ These are the properties that are available when creating an Agent.
 
 #### Creating an Agent
 
-To create an agent, start by defining the LLM model you want to power it with.
-Currently, only OpenAI models are supported, but support for other providers is coming soon.
+Here is an example creating an agent using all the properties:
 
-Here is an example using all the properties:
-
-```typescript Model
-import { Agent, Model, Tools } from "montelo";
-
-// Define the OpenAI model name and pass in the Montelo client as a parameter
-const GPT4Model = new Model({ monteloClient, modelName: "gpt-4-turbo" });
+```typescript
+import { Agent, Tools } from "montelo";
 
 // Instantiate the Agent class with its configuration
 const researcher = new Agent({
   name: "Researcher",
   role: "You're a curious researcher. You love to find and explore the latest trends and news about {topic}.",
-  model: GPT4Model,
+  model: "gpt-4-0125-preview",
   // (Optional) Giving it the ability to search Google
   tools: [Tools.GoogleSearchTool],
   // (Optional) System message
