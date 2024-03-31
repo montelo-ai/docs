@@ -53,7 +53,7 @@ Simply start a new trace at the top of your route handler:
 ```typescript api/chat/route.ts
 import { Montelo } from "montelo";
 
-const { openai } = new Montelo();
+const montelo = new Montelo();
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
