@@ -98,9 +98,9 @@
       ]
     },
     {
-      "group": "Crews",
+      "group": "Experiments",
       "pages": [
-        "guides/crews"
+        "guides/experiments"
       ]
     }
   ],

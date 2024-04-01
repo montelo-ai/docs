@@ -48,7 +48,7 @@ just **one line of code**.
 
 It's really easy to add tracing to your Vercel AI SDK application with Montelo.
 
-Simply start a new trace at the top of your route handler:
+Simply start a new trace at the top of your route handler, and use the `trace` object to make API calls:
 
 ```typescript api/chat/route.ts
 import { Montelo } from "montelo";
@@ -60,6 +60,7 @@ export async function POST(req: Request) {
 
   const trace = montelo.trace({ name: "Chat" });
 
+  // use the trace to make API calls, not the montelo object
   const res1 = await trace.openai.chat.completions.create({
     model: "gpt-4",
     messages,

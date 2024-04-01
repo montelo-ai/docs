@@ -1,0 +1,157 @@
+---
+title: Experiments
+description: How to run experiments with Montelo.
+---
+
+## Experiments Overview
+
+An experiment in Montelo allows you to test your system against a dataset and evaluate its performance. With LLMs, this
+is crucial to do in order to understand how well your system is performing and to identify areas for improvement.
+
+## Running an experiment
+
+To run an experiment, you just need a dataset of datapoints created through either the Montelo UI or the Montelo SDK.
+
+This guide will walk you throw how to do this through the SDK.
+
+### Step 1: Create a dataset
+
+Each dataset has an input and output schema. The input schema is the structure of the input data that will be fed to
+the system, and the output schema is the structure of the output data that the system is expected to produce.
+
+We do this so that when running an experiment, you know **exactly** what the input and output data should look like
+through type-safety.
+
+```typescript
+const montelo = new Montelo();
+
+const dataset = await montelo.datasets.create({
+  name: "Article Dataset",
+  description: "Datasets for AI articles",
+  inputSchema: {
+    topic: "string",
+  },
+  outputSchema: {
+    article: "string",
+  },
+});
+```
+
+### Step 2: Add datapoints to the dataset
+
+After creating a dataset, you can add datapoints to it. A datapoint is a single input-output pair that the experiment
+will use to evaluate the system.
+
+```typescript
+const montelo = new Montelo();
+
+// input and output types for the dataset
+type DInput = { topic: string };
+type DOutput = { article: string };
+
+// some local dataset
+const localDataset: Array<{ input: DInput; expectedOutput: DOutput }> = [
+  {
+    input: { topic: "AI in healthcare" },
+    expectedOutput: { article: "Some article about AI in healthcare" },
+  },
+];
+
+for (const { input, expectedOutput } of localDataset) {
+  await montelo.datapoints.create({
+    dataset: dataset.slug,
+    input,
+    expectedOutput,
+  });
+}
+```
+
+### Step 3: Create and run an experiment
+
+The last step is to create and run the experiment. You need to provide a function that takes an input and returns an
+output. This function will be called with each datapoint in the dataset.
+
+```typescript
+const anthropicChat = async (input: DInput): Promise<DOutput> => {
+  const result = await montelo.anthropic.messages.create({
+    model: "claude-3-sonnet-20240229",
+    messages: [
+      {
+        role: "user",
+        content: `Write a one liner about the given content. Topic: ${input.topic}`,
+      },
+    ],
+    max_tokens: 100,
+  });
+
+  return { article: result.content[0].text };
+};
+
+// Create and run the experiment
+await montelo.experiments.createAndRun({
+  name: "AI Articles w/ Anthropic",
+  description: "Find articles about AI topics using Anthropic's LLM.",
+  dataset: dataset.slug,
+  runner: anthropicChat,
+});
+```
+
+And you're done! Montelo will first create the experiment, and then loop through each datapoint in the dataset,
+calling the `runner` function with the input data. It will then log the output and the expected output, and have it ready
+for you to analyze.
+
+## Bonus: Experiments with Montelo Crews
+
+The `runner` function can be any function that takes an input and returns an output. This means you can use any model,
+any code, any library, etc. to run your experiments. This is the power of Montelo - it's flexible and can be used with
+any system you have.
+
+Here's a quick example of how to run an experiment on a Montelo Crew.
+
+```typescript
+import { Agent, Crew, Montelo, Task } from "montelo";
+
+const montelo = new Montelo();
+
+// assuming you have already created the dataset and added datapoints
+// ...
+
+const crewChat = async (input: DInput): Promise<DOutput> => {
+  // agents
+  const WriterAgent = new Agent({
+    name: "Writer Agent",
+    role: "You are a writer of articles. Write an article about the topic {topic}",
+    model: "gpt-3.5-turbo"
+  });
+
+  // tasks
+  const WriterTask = new Task({
+    name: "Write Article Task",
+    agent: WriterAgent,
+    description: "Write an article about the topic {topic}.",
+    expectedOutput: "An easy to ready article without any jargon."
+  });
+
+  // crew
+  const crew = new Crew({
+    agents: [WriterAgent],
+    tasks: [WriterTask],
+    process: "sequential"
+  });
+
+  const { result } = await crew.start({
+    monteloClient: montelo,
+    promptInputs: { topic: input.topic }
+  });
+
+  return { article: result };
+};
+
+// Create and run the experiment
+await montelo.experiments.createAndRun({
+  name: "AI Articles w/ Crews",
+  description: "Find articles about AI topics using Crews.",
+  dataset: dataset.slug,
+  runner: crewChat,
+});
+```
