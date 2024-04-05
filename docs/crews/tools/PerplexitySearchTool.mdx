@@ -1,0 +1,46 @@
+---
+title: PerplexitySearchTool
+icon: searchengin
+---
+
+#### Description
+
+This tool allows you to use the Perplexity API to search and get a summarized version of google search results. This is useful when you want to:
+
+1. **Answer questions**
+2. **Explore topics in depth**
+3. **Summarize articles**
+4. **Get latest news about a topic**
+
+You can read more about the Perplexity API [here](https://www.perplexity.ai/hub/getting-started).
+
+#### How to use
+
+1. Sign up and get your api key from [Perplexity API Docs](https://docs.perplexity.ai/docs/getting-started)
+2. Set the `PERPLEXITY_API_KEY` in your .env file
+3. Import and use the tool in your code:
+
+```typescript
+import { Agent, Tools } from "montelo";
+
+const PerplexitySearchTool = Tools.PerplexitySearchTool({
+  model: "sonar-small-online",
+  // temperature: 0.5,
+  // maxTokens: 1000,
+});
+
+const someResearchAgent = new Agent({
+  tools: [PerplexitySearchTool],
+  // other params...
+});
+```
+
+#### Parameters
+
+You can read more about each parameter [here](https://docs.perplexity.ai/reference/post_chat_completions).
+
+| Property      | Type                                              | Description                                                                                                                                  | Required |
+| ------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `model`       | _"sonar-small-online"_ or _"sonar-medium-online"_ | Which [online perplexity model](https://docs.perplexity.ai/docs/model-cards) to use                                                          | **Yes**  |
+| `temperature` | _0 - 2_                                           | The amount of randomness in the response. Higher = random. Lower = more deterministic.                                                       | No       |
+| `maxTokens`   | _Number_                                          | The maximum number of completion tokens returned by the API. By default, the model will generate tokens until the end of its context window. | No       |

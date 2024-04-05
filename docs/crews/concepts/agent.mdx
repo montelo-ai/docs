@@ -18,14 +18,15 @@ Here are some examples of agents:
 
 These are the properties that are available when creating an Agent.
 
-| Property                            | Type       | Description                                                                                        | Variables |
-| ----------------------------------- | ---------- | -------------------------------------------------------------------------------------------------- | --------- |
-| `name` <span class="red">\*</span>  | _String_   | The agent's name                                                                                   | No        |
-| `role` <span class="red">\*</span>  | _String_   | A description of the tasks this agent is best suited for within the crew                           | Yes       |
-| `model` <span class="red">\*</span> | _String_   | The OpenAI model used by the agent to process and generate text                                    | N/A       |
-| `systemMessage`                     | _String_   | Defines the goal this agent aims to achieve. This will guide its decision-making process           | Yes       |
-| `tools`                             | _Tool[]_   | Functions that the agent can use to perform tasks ([tools guide](/crews/concepts/tool))            | No        |
-| `callback`                          | _Function_ | A function that is called when the agent is done with a task. E.g. you can use this to log outputs | N/A       |
+| Property                            | Type       | Description                                                                                                             | Variables |
+| ----------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------- | --------- |
+| `name` <span class="red">\*</span>  | _String_   | The agent's name                                                                                                        | No        |
+| `role` <span class="red">\*</span>  | _String_   | A description of the tasks this agent is best suited for within the crew                                                | Yes       |
+| `model` <span class="red">\*</span> | _String_   | The OpenAI model used by the agent to process and generate text                                                         | N/A       |
+| `systemMessage`                     | _String_   | Defines the goal this agent aims to achieve. This will guide its decision-making process                                | Yes       |
+| `tools`                             | _Tool[]_   | Functions that the agent can use to perform tasks ([tools guide](/crews/concepts/tool))                                 | No        |
+| `eventCallback`                     | _Function_ | A function that is called when the agent is starts, processes and finishes a task. E.g. you can use this to log outputs | N/A       |
+| `maxIterations`                     | _Number_   | The maximum number of iterations the agent will run before stopping (default: 5)                                        | N/A       |
 
 <span class="text-sm">
   <span class="red">\*</span> Required properties
@@ -46,11 +47,12 @@ const researcher = new Agent({
   // (Optional) Giving it the ability to search Google
   tools: [Tools.GoogleSearchTool],
   // (Optional) System message
-  systemMessage:
-    "Format the findings in an easy-to-understand way for sharing with others.",
+  systemMessage: "Format the findings in an easy-to-understand way for sharing with others.",
+  // (Optional) Only hit the model twice per task
+  maxIterations: 2,
   // (Optional) Using the callback to log the outputs
-  stepCallback: async (output) => {
-    console.log(output);
+  eventCallback: async ({ event, message, task }) => {
+    console.log(`Researcher => ${event} - ${task} - ${message});
   },
 });
 ```

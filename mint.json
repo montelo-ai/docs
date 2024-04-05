@@ -41,17 +41,11 @@
   "navigation": [
     {
       "group": "Introduction",
-      "pages": [
-        "docs/general/welcome",
-        "docs/general/quickstart"
-      ]
+      "pages": ["docs/general/welcome", "docs/general/quickstart"]
     },
     {
       "group": "Traces & Logs",
-      "pages": [
-        "docs/traces/traces",
-        "docs/traces/logs"
-      ]
+      "pages": ["docs/traces/traces", "docs/traces/logs"]
     },
     {
       "group": "Datasets & Experiments",
@@ -80,28 +74,24 @@
         {
           "group": "Tools",
           "pages": [
-            "docs/crews/tools/GoogleSearchTool"
+            "docs/crews/tools/GoogleSearchTool",
+            "docs/crews/tools/WebScraperTool",
+            "docs/crews/tools/PerplexitySearchTool"
           ]
         }
       ]
     },
     {
       "group": "Introduction",
-      "pages": [
-        "guides/intro"
-      ]
+      "pages": ["guides/intro"]
     },
     {
       "group": "Integrations",
-      "pages": [
-        "guides/vercel-ai-sdk"
-      ]
+      "pages": ["guides/vercel-ai-sdk"]
     },
     {
       "group": "Experiments",
-      "pages": [
-        "guides/experiments"
-      ]
+      "pages": ["guides/experiments"]
     }
   ],
   "footerSocials": {

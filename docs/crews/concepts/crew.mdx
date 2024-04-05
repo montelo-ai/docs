@@ -10,20 +10,21 @@ Each crew defines the strategy for task execution, agent collaboration, and the 
 
 #### Properties
 
-| Property                                      | Type       | Description                                                  | Guide                              |
-| --------------------------------------------- | ---------- | ------------------------------------------------------------ | ---------------------------------- |
-| `name`                                        | _String_   | The name of the crew. Only used for the Montelo dashboard    | ---                                |
-| `agents` <span class="red">\*</span>          | _Agent[]_  | list of the agents in the crew                               | [agents](/crews/concepts/agent)    |
-| `tasks` <span class="red">\*</span>           | _String_   | A list of tasks assigned to the crew                         | [tasks](/crews/concepts/task)      |
-| `process` <span class="red">\*</span>         | _Process_  | The process that the crew follows. "sequential" or "managed" | [process](/crews/concepts/process) |
-| `tools`                                       | _Tool[]_   | A list of tools that the crew has access to                  | [tools](/crews/concepts/tool)      |
-| `managerModel` <span class="orange">\*</span> | _String_   | the OpenAI model powering the manager                        | ---                                |
-| `stepCallback`                                | _Function_ | A function that is called after each step of every agent     | ---                                |
+| Property                              | Type       | Description                                                                             | Guide                              |
+| ------------------------------------- | ---------- | --------------------------------------------------------------------------------------- | ---------------------------------- |
+| `name`                                | _String_   | The name of the crew. Only used for the Montelo dashboard                               | ---                                |
+| `agents` <span class="red">\*</span>  | _Agent[]_  | list of the agents in the crew                                                          | [agents](/crews/concepts/agent)    |
+| `tasks` <span class="red">\*</span>   | _String_   | A list of tasks assigned to the crew                                                    | [tasks](/crews/concepts/task)      |
+| `process` <span class="red">\*</span> | _Process_  | The process that the crew follows. "sequential" or "managed"                            | [process](/crews/concepts/process) |
+| `managerModel`<sup>2</sup>            | _String_   | the OpenAI model powering the manager                                                   | ---                                |
+| `verbose`                             | _Boolean_  | Whether or not to log what's happening to the terminal                                  | ---                                |
+| `tools`                               | _Tool[]_   | A list of tools that the crew has access to                                             | [tools](/crews/concepts/tool)      |
+| `eventCallback`                       | _Function_ | A function that is called after each step of every agent (start/processing/finish task) | ---                                |
 
 <div class="text-sm">
   <span class="red">\*</span> Required properties
 
-  <span class="orange">\*</span> Required for a `managed` process
+  <sup>2</sup> Required for a `managed` process
 </div>
 
 #### Creating a Crew
@@ -44,11 +45,11 @@ const crew = new Crew({
   agents: [agent1, agent2],
   tasks: [task1, task2],
   tools: [SomeRandomTool],
-  stepCallback: async (output, agentName) => {
-    console.log(`[${agentName}] Agent Done: ${output}`);
+  verbose: true,
+  eventCallback: async ({ event, message, agent, task }) => {
+    console.log(`${event} - ${task} - ${agent} - ${message});
   },
 });
-
 ````
 
 ```typescript Managed
@@ -63,8 +64,9 @@ const crew = new Crew({
   agents: [agent1, agent2],
   tasks: [task1, task2],
   tools: [SomeRandomTool],
-  stepCallback: async (output, agentName) => {
-    console.log(`[${agentName}] Agent Done: ${output}`);
+  verbose: true,
+  eventCallback: async ({ event, message, agent, task }) => {
+    console.log(`${event} - ${task} - ${agent} - ${message});
   },
 });
 ````
