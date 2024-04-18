@@ -32,12 +32,6 @@
     "name": "Dashboard",
     "url": "https://app.montelo.ai"
   },
-  "tabs": [
-    {
-      "name": "Guides",
-      "url": "guides"
-    }
-  ],
   "navigation": [
     {
       "group": "Introduction",
@@ -80,18 +74,6 @@
           ]
         }
       ]
-    },
-    {
-      "group": "Introduction",
-      "pages": ["guides/intro"]
-    },
-    {
-      "group": "Integrations",
-      "pages": ["guides/vercel-ai-sdk"]
-    },
-    {
-      "group": "Experiments",
-      "pages": ["guides/experiments"]
     }
   ],
   "footerSocials": {
