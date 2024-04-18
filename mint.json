@@ -31,11 +31,17 @@
   "navigation": [
     {
       "group": "Introduction",
-      "pages": ["docs/general/welcome", "docs/general/quickstart"]
+      "pages": [
+        "docs/general/welcome",
+        "docs/general/quickstart"
+      ]
     },
     {
       "group": "Traces & Logs",
-      "pages": ["docs/traces/traces", "docs/traces/logs"]
+      "pages": [
+        "docs/traces/traces",
+        "docs/traces/logs"
+      ]
     },
     {
       "group": "Datasets & Experiments",
