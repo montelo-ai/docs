@@ -82,10 +82,5 @@
     "website": "https://montelo.ai",
     "twitter": "https://twitter.com/monteloai",
     "discord": "https://discord.gg/3t6WJzDHRB"
-  },
-  "analytics": {
-    "posthog": {
-      "apiKey": "phc_iZ0VLonpOMLBi7z9cljlvKHXODB1udna8oQbtFDlBbQ"
-    }
   }
 }
