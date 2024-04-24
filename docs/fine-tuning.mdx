@@ -1,0 +1,58 @@
+---
+title: Fine-Tuning
+description: Fine-tuning models can lower your costs and latency, and improve performance.
+icon: sliders
+---
+
+Fine-tuning on Montelo starts with a dataset. First, create a fine-tune dataset:
+
+<Frame type="glass">
+  <img src="/assets/fine-tuning/ftmodal.png" alt="Runs Overview"/>
+</Frame>
+
+This is a special type of dataset that follows the OpenAI `messages` format. Here is an example fine-tune dataset.
+
+The input to the datapoint should be:
+
+```json
+{"messages": [{"role": "system", "content": "Marv is a factual chatbot that is also sarcastic."}, {"role": "user", "content": "What's the capital of France?"}]}
+```
+
+The output to the datapoint should be:
+
+```json
+{"messages": [{"role": "assistant", "content": "Paris, as if everyone doesn't know that already."}]}
+```
+
+Upload datapoints to this dataset in the following way:
+
+```typescript
+import OpenAI from "openai";
+import ChatCompletionMessageParam = OpenAI.ChatCompletionMessageParam;
+
+const inputMessages: ChatCompletionMessageParam[] = [
+  {
+    role: "system",
+    content: "Marv is a factual chatbot that is also sarcastic."
+  },
+  {
+    role: "user",
+    content: "What's the capital of France?",
+  }
+];
+
+const outputMessages: ChatCompletionMessageParam[] = [
+  {
+    role: "assistant",
+    content: "Paris, as if everyone doesn't know that already."
+  }
+];
+
+await montelo.datapoints.create({
+  dataset: "my-dataset",
+  input: { messages: inputMessages },
+  expectedOutput: { messages: outputMessages },
+});
+```
+
+Once that's done, you can go ahead and click fine-tune in the UI, and it'll start the fine-tune!

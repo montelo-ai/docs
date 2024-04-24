@@ -22,6 +22,10 @@
     {
       "name": "Discord",
       "url": "https://discord.gg/3t6WJzDHRB"
+    },
+    {
+      "name": "Blog",
+      "url": "https://montelo.ai/blog"
     }
   ],
   "topbarCtaButton": {
@@ -37,44 +41,15 @@
       ]
     },
     {
-      "group": "Traces & Logs",
+      "group": "Features",
       "pages": [
         "docs/traces/traces",
-        "docs/traces/logs"
-      ]
-    },
-    {
-      "group": "Datasets & Experiments",
-      "pages": [
+        "docs/traces/logs",
         "docs/datasets/datasets",
         "docs/datasets/datapoints",
         "docs/experiments/experiments",
-        "docs/experiments/runs"
-      ]
-    },
-    {
-      "group": "Crews & Agents",
-      "pages": [
-        "docs/crews/introduction",
-        "docs/crews/getting-started",
-        {
-          "group": "Core Concepts",
-          "pages": [
-            "docs/crews/concepts/agent",
-            "docs/crews/concepts/tool",
-            "docs/crews/concepts/task",
-            "docs/crews/concepts/crew",
-            "docs/crews/concepts/process"
-          ]
-        },
-        {
-          "group": "Tools",
-          "pages": [
-            "docs/crews/tools/GoogleSearchTool",
-            "docs/crews/tools/WebScraperTool",
-            "docs/crews/tools/PerplexitySearchTool"
-          ]
-        }
+        "docs/experiments/runs",
+        "docs/fine-tuning"
       ]
     }
   ],
