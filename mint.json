@@ -3,7 +3,8 @@
   "name": "Montelo Documentation",
   "logo": {
     "light": "/assets/logo_light.svg",
-    "dark": "/assets/logo_dark.svg"
+    "dark": "/assets/logo_dark.svg",
+    "href": "https://montelo.ai"
   },
   "modeToggle": {
     "default": "dark"
