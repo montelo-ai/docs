@@ -4,78 +4,118 @@ description: Group multiple logs into a single trace to debug, monitor, and anal
 icon: arrow-progress
 ---
 
+![Sample Trace](/assets/trace/sample.png)
+
+## Explanation
+
 Traces allow you to group multiple logs together to easily debug, monitor, and analyze your application's flow.
+
 By organizing related logs into a single trace, you can better understand how a request moves through your system, identify performance bottlenecks, and quickly pinpoint errors.
+
+Traces are currently supported in logging and experiments.
 
 ## Basic
 
 To create a trace, use the `trace` method on a Montelo instance. This returns a new `Trace` instance for you to use.
 
 ```typescript
-const montelo = new Montelo();
+const chat = async (topic: string): Promise<void> => {
+  const trace = montelo.trace({ name: "Example Trace" });
 
-const trace = montelo.trace({ name: "Example Trace" });
+  await trace.log({ name: "Vector DB", input: { topic } });
+  await trace.openai.chat.completions.create({
+    name: "Short Joke",
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "user", content: `Tell me a short joke about ${topic}` }],
+  });
+  await trace.mistral.chat({
+    name: "Lame joke",
+    model: "mistral-tiny",
+    messages: [{ role: "user", content: `Tell me a lame joke ${topic}` }],
+  });
+};
 
-await trace.log(...); // log a vector db call
-await trace.openai.chat.completions.create(...); // log an openai call
-await trace.anthropic.messages.create(...); // log an anthropic call
+void chat("Football");
 ```
 
 All logs generated within the trace instance will be grouped together in the "Example Trace".
 
+![Basic Trace](/assets/trace/basic.png)
+
 <Note>These logs will be added to the trace with no hierarchy. For hierarchical traces, see `Nesting` below.</Note>
 
-## Nesting
+## Nesting with Spans
 
-Montelo makes it easy to create nested traces by simply adding a / to the log names. This allows you to organize your traces into a hierarchical structure without the need to manage identifiers or hierarchy yourself.
-
-To create nested traces in Montelo, we simply add `/` to the individual log names.
-
-For example, the following code creates a trace with the name `Parent`, and then creates a nested trace with the name `Child`.
+You can nest logs within a trace using spans.
 
 ```typescript
-const montelo = new Montelo();
+const trace = montelo.trace({ name: "Sample Trace" });
 
-const trace = montelo.trace({ name: "Example Trace" });
+const span = await trace.span({ name: "Span - 1" });
+await span.log({ name: "Log - 1.1" });
+await span.log({ name: "Log - 1.2" });
 
-await trace.openai.chat.completions.create({ name: "Parent", ... });
-await trace.anthropic.messages.create({ name: "Parent / Child", ... });
+const nestedSpan = await span.span({ name: "Nested Span - 1.3" });
+await nestedSpan.log({ name: "Log - 1.3.1" });
+await nestedSpan.log({ name: "Log - 1.3.2" });
+
+await span.log({ name: "Log - 1.4" });
+
+await trace.log({ name: "Log - 2" });
 ```
 
-That's it! The logs will be grouped into a single trace with the name `Parent`, and the nested trace will be grouped into a single trace with the name `Child`.
+{/* TODO should figure out if we support this */}
+{/* Distributed */}
 
-You don't have to pass around identifiers or manage the hierarchy yourself. Montelo will automatically group the logs into the correct traces.
+## In Experiments
 
-This is especially useful when you have a complex application, with many different components that you want to trace.
+Traces also work in experiments, so that each run in the `runner` is enclosed in a trace.
 
-### Tip
-
-You will most likely already know the names of the nesting beforehand, so you can use an Enum to define the names of the traces.
+Take this experiment for example:
 
 ```typescript
-const montelo = new Montelo();
+const chat = async (topic: string): Promise<string> => {
+  const trace = montelo.trace({ name: "Example Trace" });
 
-enum TraceNames {
-  BrowserAgent = "Browser Agent",
-  PDFAgent = "PDF Agent",
-}
+  await trace.log({ name: "Vector DB", input: { topic } });
+  await trace.openai.chat.completions.create({
+    name: "Short Joke",
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "user", content: `Tell me a short joke about ${topic}` }],
+  });
+  const result = await trace.mistral.chat({
+    name: "Lame joke",
+    model: "mistral-tiny",
+    messages: [{ role: "user", content: `Tell me a lame joke ${topic}` }],
+  });
 
-const trace = montelo.trace({ name: "Trace Name" });
+  return result.choices[0].message.content;
+};
 
-await trace.openai.chat.completions.create({
-  name: `${TraceNames.BrowserAgent} / Browse search engine results`,
-});
-await trace.log({ ... });
-await trace.openai.chat.completions.create({
-  name: `${TraceNames.PDFAgent} / Read a pdf`,
+
+await montelo.experiments.createAndRun({
+  name: "Example Experiment",
+  dataset: dataset.slug,
+  runner: async ({ input }) => {
+    const joke = await chat(input.topic);
+    return { joke }
+  },
+  evaluator: async () => {
+    return {
+      isFunny: "yes"
+    }
+  },
 });
 ```
 
-## UI
+The code above will create the following two distinct traces to help you analyze and debug.
 
-The Montelo UI provides a visual representation of your traces, making it easy to debug, monitor, and analyze your application's flow.
-
-<Frame type="glass">
-  <img src="/assets/TraceExample.png" alt="Trace Example"/>
-</Frame>
-
+<video
+  controls
+  muted
+  autoplay
+  loop
+  playsInline
+  className="w-full aspect-video"
+  src="/assets/trace/trace_experiment.mp4"
+></video>

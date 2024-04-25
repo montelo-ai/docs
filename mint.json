@@ -40,14 +40,14 @@
         "docs/general/welcome",
         "docs/general/concepts",
         "docs/general/quickstart",
-        "docs/general/typescript"
+        "docs/general/typescript",
+        "docs/general/faq"
       ]
     },
     {
       "group": "Features",
       "pages": [
         "docs/traces/traces",
-        "docs/traces/logs",
         "docs/datasets/datasets",
         "docs/datasets/datapoints",
         "docs/experiments/experiments",
@@ -57,7 +57,7 @@
       ]
     },
     {
-      "group": "Examples",
+      "group": "Resources",
       "pages": [
         "docs/examples",
         "docs/videos"
