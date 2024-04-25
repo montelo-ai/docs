@@ -58,7 +58,8 @@
     {
       "group": "Examples",
       "pages": [
-        "docs/examples"
+        "docs/examples",
+        "docs/videos"
       ]
     }
   ],
