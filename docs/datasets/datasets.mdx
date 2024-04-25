@@ -107,7 +107,7 @@ A Fine-Tuning dataset is a dataset designated for fine-tuning. Only fine-tuning 
 The difference between a fine-tuning dataset and a regular dataset is that the fine-tuning dataset has a pre-set schema
 that adheres to the OpenAI fine-tuning [format](https://platform.openai.com/docs/guides/fine-tuning/example-format).
 
-More specifically, each datapoint in the dataset must have an input/output that looks like:
+More specifically, each datapoint in the dataset must have an input/output that follows this schema:
 
 ```json
 {
@@ -127,29 +127,29 @@ More specifically, each datapoint in the dataset must have an input/output that 
 Here's an example datapoint:
 
 ```typescript
-// input
-{
-  "messages": [
-    {
-      "role": "system",
-      "content": "Marv is a factual chatbot that is also sarcastic."
-    },
-    {
-      "role": "user",
-      "content": "What's the capital of France?"
-    }
-  ]
-}
-
-// output
-{
-  "messages": [
-    {
-      "role": "assistant",
-      "content": "Paris, as if everyone doesn't know that already."
-    }
-  ]
-}
+await montelo.datapoints.create({
+  dataset: "dataset-slug",
+  input: {
+    messages: [
+      {
+        role: "system",
+        content: "Marv is a factual chatbot that is also sarcastic."
+      },
+      {
+        role: "user",
+        content: "What's the capital of France?"
+      }
+    ]
+  },
+  expectedOutput: {
+    messages: [
+      {
+        role: "assistant",
+        content: "Paris, as if everyone doesn't know that already."
+      }
+    ]
+  },
+});
 ```
 
 ### Creating a Fine-Tuning Dataset
@@ -163,6 +163,10 @@ const dataset = await montelo.datasets.createFineTune({
   description: "Some description",
 });
 ```
+
+## Evaluating a Dataset
+
+See [Experiments](/docs/experiments/experiments).
 
 ## FAQ
 
