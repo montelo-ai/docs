@@ -35,10 +35,12 @@
   },
   "navigation": [
     {
-      "group": "Introduction",
+      "group": "Getting Started",
       "pages": [
         "docs/general/welcome",
-        "docs/general/quickstart"
+        "docs/general/concepts",
+        "docs/general/quickstart",
+        "docs/general/typescript"
       ]
     },
     {

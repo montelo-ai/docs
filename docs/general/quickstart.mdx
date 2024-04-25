@@ -6,7 +6,7 @@ icon: play
 
 ## Sign up for Montelo
 
-To get started, you need to first [sign up](https://app.montelo.ai/auth/register) for an account.
+To get started, you need to first [sign up](https://app.montelo.ai/auth/register) for a **free** account.
 
 ## Installing the SDK
 
@@ -16,7 +16,7 @@ Start by installing Montelo.
 npm install montelo
 ```
 
-## Getting your API Key
+## API Keys
 
 After setting up your account, you can find your API key for the environment you want to use from the dashboard.
 
@@ -25,71 +25,18 @@ After setting up your account, you can find your API key for the environment you
 When developing in a team, it's a good idea to create a new environment for each developer.
 This way, developers can work independently without interfering with each other's work.
 
-### Setting the Montelo API Key
-
 With your API key in hand, you can now set up the SDK.
 Either include the API key as an environment variable called `MONTELO_API_KEY` or pass it as an argument to the `Montelo` constructor.
 
-<CodeGroup>
-```dotenv .env
-MONTELO_API_KEY=your-api-key
-```
-
-```typescript main.ts
-import { Montelo } from "montelo";
-
-const montelo = new Montelo();
-```
-</CodeGroup>
-
-Or to manually set the API key:
-
-```typescript main.ts
-import { Montelo } from "montelo";
-
-const montelo = new Montelo({
-  montelo: {
-    apiKey: "your-api-key",
-  },
-});
-```
-
-### Setting LLM Provider API Keys
-
-Montelo simplifies the process of using multiple LLM providers by providing a single interface to interact with them.
-We use the same authentication method as the LLM providers themselves, so you can use the same API keys you already have.
-
-To use a specific LLM provider, you need to set the API key for that provider.
-For example, to use OpenAI, you need to set the `OPENAI_API_KEY` environment variable according to the [instructions](https://platform.openai.com/docs/quickstart?context=node) provided by OpenAI.
-
-<CodeGroup>
 ```dotenv .env
 MONTELO_API_KEY=your-api-key
 OPENAI_API_KEY=your-openai-api-key
 ```
 
-```typescript main.ts
-import { Montelo } from "montelo";
 
-const montelo = new Montelo();
-```
-</CodeGroup>
+## Collect production requests
 
-Or, to manually set the API key:
-
-```typescript main.ts
-import { Montelo } from "montelo";
-
-const montelo = new Montelo({
-  openai: {
-    apiKey: "your-openai-api-key",
-  },
-});
-```
-
-## Start using Montelo
-
-Now that you have the SDK set up, you can start using Montelo.
+Now that you have the SDK set up, you can start using Montelo to collect production requests.
 
 ```typescript main.ts
 import { Montelo } from "montelo";
@@ -111,13 +58,85 @@ await montelo.openai.chat.completions.create({
 });
 ```
 
-And that's it! After following these steps, you should have Montelo set up and ready to use.
-
 You should now be able to view logs and metrics in the Montelo dashboard.
+
+## Start a trace
+
+To trace multiple logs together, simply create a new trace:
+
+```typescript
+const trace = montelo.trace({ name: "Sample Trace" });
+
+const span = await trace.span({ name: "Span - 1" });
+await span.log({ name: "Log - 1.1" });
+await span.log({ name: "Log - 1.2" });
+
+const nestedSpan = await span.span({ name: "Nested Span - 1.3" });
+await nestedSpan.log({ name: "Log - 1.3.1" });
+await nestedSpan.log({ name: "Log - 1.3.2" });
+
+await span.log({ name: "Log - 1.4" });
+
+await trace.log({ name: "Log - 2" });
+```
+
+## Create a dataset
+
+Create a dataset via our SDK.
+
+```typescript
+const dataset = await montelo.datasets.create({
+  name: "Sentiment analysis",
+  description: "Sentiment analysis dataset for project X",
+  inputSchema: { sentence: "string" },
+  outputSchema: { sentiment: "string" },
+});
+
+await montelo.datapoints.createMany({
+  dataset: dataset.slug,
+  datapoints: [ ... ], // upload here
+});
+```
+
+## Run an experiment
+
+Now that you have an uploaded dataset, you can run an experiment against it!
+
+You supply a runner and an evaluator function that runs against each datapoint in the dataset. What you return from
+the runner and evaluator are then logged and tracked for you to analyze in Montelo.
+
+```typescript
+await montelo.experiments.createAndRun({
+  name: "My First Experiment",
+  description: "So exciting!",
+  dataset: dataset.slug,
+  runner: async ({ input, metadata }) => {
+    const sentiment = await llmRequest(input, metadata);
+    return { sentiment }
+  },
+  evaluator: async ({ input, expectedOutput, actualOutput, metadata }) => {
+    return {
+      isCorrect: expectedOutput.sentiment === actualOutput.sentiment,
+    }
+  },
+});
+```
+
+## Fine-tuning
+
+To fine-tune a model on a dataset, first make sure that the dataset is a fine-tuning dataset. You can create a fine-tune
+dataset either from the UI or the SDK.
+
+Then, upload datapoints that follow the dataset schema.
+
+Finally, go to the dataset's page on the UI and click on Fine-Tune. Select your model, and we'll take it from there and
+fine-tune against the model on your dataset!
 
 ## Next Steps
 
-Now that you have Montelo set up, you can start using the SDK to build your LLM applications.
+Check out our [blog posts](https://montelo.ai/blog) to learn more about:
 
-Next, check out how to group multiple LLM calls into a single [trace](/traces).
+- Classification using fine-tuned GPT-3.5 ([link](https://www.montelo.ai/blog/classification-using-fine-tuned-gpt3-5-in-typescript))
+- Integrating with the Vercel AI SDK ([link](https://www.montelo.ai/blog/montelo-vercel-ai-sdk-v3-tutorial))
+- View the code for complete examples in our `examples` [repo](https://github.com/montelo-org/examples)
 
