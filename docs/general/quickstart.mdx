@@ -20,6 +20,15 @@ npm install montelo
 
 After setting up your account, you can find your API key for the environment you want to use from the dashboard.
 
+<video
+  muted
+  autoPlay
+  loop
+  playsInline
+  className="w-full aspect-video"
+  src="/assets/apikey.mp4"
+></video>
+
 <Note>Each project has several environments, and each environment has it’s own API Key.</Note>
 
 When developing in a team, it's a good idea to create a new environment for each developer.
@@ -33,10 +42,12 @@ MONTELO_API_KEY=your-api-key
 OPENAI_API_KEY=your-openai-api-key
 ```
 
+## Replace OpenAI/Anthropic/Mistral calls with Montelo
 
-## Collect production requests
+Now that you have the SDK set up, you can start using Montelo to collect production requests. First, simply replace
+OpenAI/Anthropic/Mistral calls with Montelo, just by adding `montelo.` to the beginning of the call.
 
-Now that you have the SDK set up, you can start using Montelo to collect production requests.
+For example, to call OpenAI:
 
 ```typescript main.ts
 import { Montelo } from "montelo";
@@ -58,27 +69,43 @@ await montelo.openai.chat.completions.create({
 });
 ```
 
-You should now be able to view logs and metrics in the Montelo dashboard.
-
 ## Start a trace
 
-To trace multiple logs together, simply create a new trace:
+To trace multiple logs together, create a new trace:
 
 ```typescript
 const trace = montelo.trace({ name: "Sample Trace" });
 
-const span = await trace.span({ name: "Span - 1" });
-await span.log({ name: "Log - 1.1" });
-await span.log({ name: "Log - 1.2" });
+await trace.anthropic.messages.create({
+  name: "Action 1",
+  model: "claude-3-sonnet-20240229",
+  messages: [{ role: "user", content: "Tell me a joke about the person reading this." }],
+  max_tokens: 100,
+});
 
-const nestedSpan = await span.span({ name: "Nested Span - 1.3" });
-await nestedSpan.log({ name: "Log - 1.3.1" });
-await nestedSpan.log({ name: "Log - 1.3.2" });
+await trace.mistral.chat({
+  name: "Action 2",
+  model: "mistral-tiny",
+  messages: [{ role: "user", content: "Tell me a joke about the person reading this." }],
+});
 
-await span.log({ name: "Log - 1.4" });
-
-await trace.log({ name: "Log - 2" });
+await montelo.openai.chat.completions.create({
+  name: "Action 3",
+  model: "gpt-3.5-turbo",
+  messages: [
+    { role: "user", content: "Tell me a joke about the person reading this." },
+  ],
+});
 ```
+
+<video
+  muted
+  autoPlay
+  loop
+  playsInline
+  className="w-full aspect-video"
+  src="/assets/trace.mp4"
+></video>
 
 ## Create a dataset
 
@@ -91,10 +118,23 @@ const dataset = await montelo.datasets.create({
   inputSchema: { sentence: "string" },
   outputSchema: { sentiment: "string" },
 });
+```
 
+## Upload datapoints
+
+```typescript
 await montelo.datapoints.createMany({
   dataset: dataset.slug,
-  datapoints: [ ... ], // upload here
+  datapoints: [
+    {
+      input: { sentence: "That was an awesome event." },
+      expectedOutput: { sentiment: "positive" }
+    },
+    {
+      input: { sentence: "That was a bad event." },
+      expectedOutput: { sentiment: "negative" }
+    }
+  ],
 });
 ```
 
@@ -121,16 +161,6 @@ await montelo.experiments.createAndRun({
   },
 });
 ```
-
-## Fine-tuning
-
-To fine-tune a model on a dataset, first make sure that the dataset is a fine-tuning dataset. You can create a fine-tune
-dataset either from the UI or the SDK.
-
-Then, upload datapoints that follow the dataset schema.
-
-Finally, go to the dataset's page on the UI and click on Fine-Tune. Select your model, and we'll take it from there and
-fine-tune against the model on your dataset!
 
 ## Next Steps
 
