@@ -54,6 +54,12 @@
         "docs/experiments/runs",
         "docs/fine-tuning"
       ]
+    },
+    {
+      "group": "Examples",
+      "pages": [
+        "docs/examples"
+      ]
     }
   ],
   "footerSocials": {
