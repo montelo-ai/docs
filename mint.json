@@ -51,7 +51,6 @@
         "docs/datasets/datasets",
         "docs/datasets/datapoints",
         "docs/experiments/experiments",
-        "docs/experiments/runs",
         "docs/fine-tuning",
         "docs/self-hosting"
       ]
