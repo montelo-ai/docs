@@ -150,3 +150,24 @@ You can analyze the results of your evaluations on our UI.
   className="w-full aspect-video"
   src="/assets/experimentanalysis.mp4"
 ></video>
+
+## Debugging Runners
+
+In your `runner`, we recommend you start a [trace](/docs/traces/traces) at the start of your runner. Montelo will pickup
+that trace, and display it for you alongside the run in the UI, so you can debug what went wrong in your experiment!
+
+<video
+  muted
+  autoPlay
+  loop
+  playsInline
+  className="w-full aspect-video"
+  src="/assets/debuggingexperiment.mp4"
+></video>
+
+## FAQ
+
+### Where do traces inside the runner show up on the UI?
+
+Traces inside a runner will only show up on the run that it's associated to, and not on the dashboard or the `Traces`
+page, which are dedicated for production traces and analytics.
