@@ -32,7 +32,9 @@ associated to a dataset.
 You'll also need a `runner` and an `evaluator` function. We'll look at a classification example where the following
 datapoints have been uploaded:
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 await montelo.datapoints.createMany({
   dataset: dataset.slug,
   datapoints: [
@@ -48,18 +50,48 @@ await montelo.datapoints.createMany({
 });
 ```
 
+```python Python
+montelo.datapoints.create_many(
+  dataset=dataset.slug,
+  datapoints=[
+    {
+      "input": { "sentence": "That was an awesome event." },
+      "expectedOutput": { "sentiment": "positive" }
+    },
+    {
+      "input": { "sentence": "That was a bad event." },
+      "expectedOutput": { "sentiment": "negative" }
+    }
+  ],
+)
+```
+</CodeGroup>
+
+
 ### Runner
 
 The `runner` function runs the datapoint's input and returns the output. In the example above, the `runner` would take
 the sentence as input, and has to return a sentiment. Here's the most basic example of this:
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 const runner = async (sentence: string): string => {
   // call an llm to perform the classification
   const sentiment = await llmCall(sentence);
   return sentiment;
 };
 ```
+
+```python Python
+def runner(sentence: str):
+    # call an llm to perform the classification
+    sentiment = llm_call(sentence)
+    return dict(sentiment=sentiment)
+```
+
+</CodeGroup>
+
 
 The `runner` can be *any* function. You could call an external service, an internal API, or even a really simple function
 like above.
@@ -71,13 +103,21 @@ evaluation you want! Evaluations are just functions at the end of the day.
 
 Note that you must return an object, not a primitive, for evaluators. Here's an example
 
-```typescript
+<CodeGroup>
+```typescript Node
 const evaluator = (goldSentiment: string, predictedSentiment) => {
   return {
     isCorrect: goldSentiment === predictedSentiment,
   };
 };
 ```
+
+```python Python
+def evaluator(gold_sentiment: str, predicted_sentiment: str):
+    return dict(is_correct=gold_sentiment == predicted_sentiment)
+```
+</CodeGroup>
+
 
 Your evaluator can be any function!
 
@@ -93,7 +133,9 @@ We'll take the object that you return, and run statistics and create charts for 
 
 Now that you have a `runner` and an `evaluator`, let's run our experiment!
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 type Input = { sentence: string };
 type Output = { sentiment: string };
 type Eval = { isCorrect: boolean };
@@ -110,6 +152,18 @@ await montelo.experiments.createAndRun<Input, Output, Eval>({
   },
 });
 ```
+
+```python Python
+montelo.experiments.create_and_run(
+  name="Experiment",
+  dataset="dataset-slug",
+  runner=lambda input: {"sentiment": runner(input["sentence"])},
+  evaluator=lambda expected_output, actual_output: evaluator(expected_output["sentiment"], actual_output["sentiment"]),
+)
+```
+
+</CodeGroup>
+
 
 And that's all you need! Behind the scenes, Montelo will pull all the datapoints of the dataset and run the
 `runner` and `evaluator` on you each datapoint.

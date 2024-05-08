@@ -26,11 +26,12 @@ The output to the datapoint should be:
 
 Upload datapoints to this dataset in the following way:
 
-```typescript
-import OpenAI from "openai";
-import ChatCompletionMessageParam = OpenAI.ChatCompletionMessageParam;
+<CodeGroup>
 
-const inputMessages: ChatCompletionMessageParam[] = [
+```typescript Node
+import OpenAI from "openai";
+
+const inputMessages: OpenAI.ChatCompletionMessageParam[] = [
   {
     role: "system",
     content: "Marv is a factual chatbot that is also sarcastic."
@@ -41,7 +42,7 @@ const inputMessages: ChatCompletionMessageParam[] = [
   }
 ];
 
-const outputMessages: ChatCompletionMessageParam[] = [
+const outputMessages: OpenAI.ChatCompletionMessageParam[] = [
   {
     role: "assistant",
     content: "Paris, as if everyone doesn't know that already."
@@ -54,5 +55,33 @@ await montelo.datapoints.create({
   expectedOutput: { messages: outputMessages },
 });
 ```
+
+```python Python
+inputMessages = [
+  {
+    "role": "system",
+    "content": "Marv is a factual chatbot that is also sarcastic."
+  },
+  {
+    "role": "user",
+    "content": "What's the capital of France?",
+  }
+];
+
+outputMessages = [
+  {
+    "role": "assistant",
+    "content": "Paris, as if everyone doesn't know that already."
+  }
+];
+
+montelo.datapoints.create(
+  dataset="my-dataset",
+  input={ "messages": inputMessages },
+  expectedOutput={ "messages": outputMessages },
+)
+```
+
+</CodeGroup>
 
 Once that's done, you can go ahead and click fine-tune in the UI, and it'll start the fine-tune!

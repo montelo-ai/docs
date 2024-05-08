@@ -43,7 +43,9 @@ A datapoint in this dataset could look like this:
 
 To create a single datapoint:
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 await montelo.datapoints.create({
   dataset: "dataset-slug",
   input: { topic: "Football" },
@@ -51,11 +53,24 @@ await montelo.datapoints.create({
 });
 ```
 
+```python Python
+montelo.datapoints.create(
+  dataset="dataset-slug",
+  input={ "topic": "Football" },
+  expectedOutput={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
+)
+```
+
+</CodeGroup>
+
+
 ### Create Many
 
 To create many datapoints in a single efficient operation:
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 await montelo.datapoints.createMany({
   dataset: "dataset-slug",
   datapoints: [
@@ -71,11 +86,32 @@ await montelo.datapoints.createMany({
 });
 ```
 
+```python Python
+montelo.datapoints.create_many(
+  dataset="dataset-slug",
+  datapoints=[
+    {
+      "input": { "topic": "Soccer" },
+      "expectedOutput": { "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
+    },
+    {
+      "input": { "topic": "Football" },
+      "expectedOutput": { "joke": "Why don't American football teams play soccer? Because they can't handle the competition without taking a timeout!" },
+    },
+  ],
+)
+```
+
+</CodeGroup>
+
+
 ## Train/Test
 
 A datapoint can be in either the train/test split. By default, all datapoints are marked as train.
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 await montelo.datapoints.create({
   dataset: "dataset-slug",
   input: { topic: "Football" },
@@ -84,13 +120,27 @@ await montelo.datapoints.create({
 });
 ```
 
+```python Python
+montelo.datapoints.create(
+  dataset="dataset-slug",
+  input={ "topic": "Football" },
+  expectedOutput={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
+  split="TEST"
+)
+```
+
+</CodeGroup>
+
+
 This is useful for when you've fine-tuned a model on the train split, and want to run experiments and evaluations on the test split.
 
 ## Metadata
 
 You can add custom metadata to each datapoint.
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 await montelo.datapoints.create({
   dataset: "dataset-slug",
   input: { topic: "Football" },
@@ -98,6 +148,18 @@ await montelo.datapoints.create({
   metadata: { some: "metadata" }
 });
 ```
+
+```python Python
+montelo.datapoints.create(
+  dataset="dataset-slug",
+  input={ "topic": "Football" },
+  expectedOutput={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
+  metadata={ "some": "metadata" }
+)
+```
+
+</CodeGroup>
+
 
 ## Fine-Tuning
 
@@ -120,7 +182,9 @@ Each datapoint in a fine-tune dataset must have an input/output that follows thi
 
 Here's an example datapoint:
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 await montelo.datapoints.create({
   dataset: "dataset-slug",
   input: {
@@ -146,11 +210,42 @@ await montelo.datapoints.create({
 });
 ```
 
+```python Python
+montelo.datapoints.create(
+  dataset="dataset-slug",
+  input={
+    "messages": [
+      {
+        "role": "system",
+        "content": "Marv is a factual chatbot that is also sarcastic."
+      },
+      {
+        "role": "user",
+        "content": "What's the capital of France?"
+      }
+    ]
+  },
+  "expectedOutput": {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "Paris, as if everyone doesn't know that already."
+      }
+    ]
+  },
+)
+```
+
+</CodeGroup>
+
+
 ## Types
 
 You may supply types to the methods `datapoints.create` and `datapoints.createMany`, like this:
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 type DInput = { topic: string };
 type DOutput = { joke: string };
 
@@ -160,6 +255,17 @@ await montelo.datapoints.create<DInput, DOutput>({
   expectedOutput: { joke: "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
 });
 ```
+
+```python Python
+montelo.datapoints.create(
+  dataset="dataset-slug",
+  input={ "topic": "Football" },
+  expectedOutput={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
+)
+```
+
+</CodeGroup>
+
 
 This will make it so that TypeScript will complain if `input` does not match `DInput`, or if `expectedOutput` does not
 match `DOutput`.

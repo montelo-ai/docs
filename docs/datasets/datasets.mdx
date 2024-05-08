@@ -57,7 +57,9 @@ const schema = {
 When you create a dataset, Montelo will also create a unique slug derived from it's name.
 You will use the slug when uploading datapoints or running an experiment:
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 await montelo.datapoints.createMany({
   dataset: "", // slug goes here
   datapoints: formattedDatapoints,
@@ -67,9 +69,26 @@ await montelo.experiments.createAndRun({
   name: "Example",
   dataset: "", // slug goes here
   runner,
-  evaluator,,
+  evaluator,
 });
 ```
+
+```python Python
+montelo.datapoints.create_many(
+  dataset="", // slug goes here
+  datapoints=formattedDatapoints,
+)
+
+montelo.experiments.create_and_run(
+  name="Example",
+  dataset="", // slug goes here
+  runner=runner,
+  evaluator=evaluator,
+)
+```
+
+</CodeGroup>
+
 
 You can find the dataset slug on the dataset ID page.
 
@@ -83,7 +102,9 @@ You can find the dataset slug on the dataset ID page.
 
 To create a dataset, run `montelo.datasets.create`;
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 const dataset = await montelo.datasets.create({
   name: "Article Dataset",
   description: "Datasets for AI articles",
@@ -91,6 +112,17 @@ const dataset = await montelo.datasets.create({
   outputSchema: { article: "string" },
 });
 ```
+
+```python Python
+dataset = montelo.datasets.create(
+  name="Article Dataset",
+  description="Datasets for AI articles",
+  inputSchema=dict(topic="string"),
+  outputSchema=dict(article="string"),
+)
+```
+</CodeGroup>
+
 
 ### Via the UI
 
@@ -126,7 +158,9 @@ More specifically, each datapoint in the dataset must have an input/output that 
 
 Here's an example datapoint:
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 await montelo.datapoints.create({
   dataset: "dataset-slug",
   input: {
@@ -152,17 +186,57 @@ await montelo.datapoints.create({
 });
 ```
 
+```python Python
+montelo.datapoints.create(
+  dataset="dataset-slug",
+  input={
+    "messages": [
+      {
+        "role": "system",
+        "content": "Marv is a factual chatbot that is also sarcastic."
+      },
+      {
+        "role": "user",
+        "content": "What's the capital of France?"
+      }
+    ]
+  },
+  expectedOutput={
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "Paris, as if everyone doesn't know that already."
+      }
+    ]
+  },
+)
+```
+
+</CodeGroup>
+
 ### Creating a Fine-Tuning Dataset
 
 You can create a fine-tune dataset using the `createFineTune` method, or from the UI by clicking on the Fine-Tune
 tab when creating a dataset.
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 const dataset = await montelo.datasets.createFineTune({
   name: "Fine-Tuning Dataset",
   description: "Some description",
 });
 ```
+
+```python Python
+dataset = montelo.datasets.create_fine_tune(
+  name="Fine-Tuning Dataset",
+  description="Some description",
+)
+```
+
+</CodeGroup>
+
 
 ## Evaluating a Dataset
 

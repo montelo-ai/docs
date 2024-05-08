@@ -20,16 +20,20 @@ Traces are currently supported in logging and experiments.
 
 To create a trace, use the `trace` method on a Montelo instance. This returns a new `Trace` instance for you to use.
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 const chat = async (topic: string): Promise<void> => {
   const trace = montelo.trace({ name: "Example Trace" });
 
   await trace.log({ name: "Vector DB", input: { topic } });
+
   await trace.openai.chat.completions.create({
     name: "Short Joke",
     model: "gpt-3.5-turbo",
     messages: [{ role: "user", content: `Tell me a short joke about ${topic}` }],
   });
+
   await trace.mistral.chat({
     name: "Lame joke",
     model: "mistral-tiny",
@@ -39,6 +43,26 @@ const chat = async (topic: string): Promise<void> => {
 
 void chat("Football");
 ```
+
+```python Python
+trace = montelo.trace(name="Example Trace")
+
+trace.log(
+    name="Vector DB",
+    input=dict(topic=topic)
+)
+
+trace.openai.chat.completions.create(
+    name="Short Joke",
+    model="gpt-3.5-turbo",
+    messages=[{ role: "user", content: f"Tell me a short joke about {topic}" }],
+)
+
+chat("Football")
+```
+
+</CodeGroup>
+
 
 All logs generated within the trace instance will be grouped together in the "Example Trace".
 
@@ -50,7 +74,9 @@ All logs generated within the trace instance will be grouped together in the "Ex
 
 You can nest logs within a trace using spans.
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 const trace = montelo.trace({ name: "Sample Trace" });
 
 const span = await trace.span({ name: "Span - 1" });
@@ -66,6 +92,25 @@ await span.log({ name: "Log - 1.4" });
 await trace.log({ name: "Log - 2" });
 ```
 
+```python Python
+trace = montelo.trace(name="Sample Trace")
+
+span = trace.span(name="Span - 1")
+span.log(name="Log - 1.1")
+span.log(name="Log - 1.2")
+
+nested_span = span.span(name="Nested Span - 1.3")
+nested_span.log(name="Log - 1.3.1")
+nested_span.log(name="Log - 1.3.2")
+
+span.log(name="Log - 1.4")
+
+trace.log(name="Log - 2")
+```
+
+</CodeGroup>
+
+
 {/* TODO should figure out if we support this */}
 {/* Distributed */}
 
@@ -75,7 +120,10 @@ Traces also work in experiments, so that each run in the `runner` is enclosed in
 
 Take this experiment for example:
 
-```typescript
+
+<CodeGroup>
+
+```typescript Node
 const chat = async (topic: string): Promise<string> => {
   const trace = montelo.trace({ name: "Example Trace" });
 
@@ -109,6 +157,43 @@ await montelo.experiments.createAndRun({
   },
 });
 ```
+
+```python Python
+def chat(topic: str):
+    trace = montelo.trace(name="Example Trace")
+
+    trace.log(name="Vector DB", input=dict(topic=topic))
+
+    completion = trace.openai.chat.completions.create(
+        name="Short Joke",
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "user",
+                "content": f"Tell me a short joke about {topic}",
+            }
+        ]
+    )
+
+    return completion.choices[0].message.content
+
+def runner(input):
+    joke = chat(input["topic"])
+    return dict(joke=joke)
+
+def evaluator():
+    return dict(is_funny="Yes")
+
+montelo.experiments.createAndRun(
+    name="Example Experiment",
+    dataset=dataset.slug,
+    runner=runner,
+    evaluator=evaluator,
+)
+```
+
+</CodeGroup>
+
 
 The code above will create the following two distinct traces to help you analyze and debug.
 
