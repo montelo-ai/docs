@@ -12,9 +12,18 @@ To get started, you need to first [sign up](https://app.montelo.ai/auth/register
 
 Start by installing Montelo.
 
-```sh
+<CodeGroup>
+
+```sh Node
 npm install montelo
 ```
+
+```sh Python
+pip install montelo
+```
+
+</CodeGroup>
+
 
 ## API Keys
 
@@ -49,13 +58,15 @@ OpenAI/Anthropic/Mistral calls with Montelo, just by adding `montelo.` to the be
 
 For example, to call OpenAI:
 
-```typescript main.ts
+<CodeGroup>
+
+```typescript Node
 import { Montelo } from "montelo";
 
 const montelo = new Montelo();
 
 await montelo.openai.chat.completions.create({
-  model: "gpt-4",
+  model: "gpt-3.5-turbo",
   messages: [
     {
       role: "system",
@@ -69,11 +80,45 @@ await montelo.openai.chat.completions.create({
 });
 ```
 
+```python Python
+from montelo import Montelo, MonteloClientOptions, OpenAIClientConfig
+
+montelo = Montelo(
+    montelo=MonteloClientOptions(
+        # This is the default and can be omitted
+        api_key=os.getenv("MONTELO_API_KEY")
+    ),
+    openai_config=OpenAIClientConfig(
+        # This is the default and can be omitted
+        api_key=os.getenv("OPENAI_API_KEY")
+    )
+)
+
+montelo.openai.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {
+            "role": "system",
+            "content": "You are a helpful assistant."
+        },
+        {
+            "role": "user",
+            "content": "What is the meaning of life?"
+        }
+    ],
+)
+```
+
+</CodeGroup>
+
+
 ## Start a trace
 
 To trace multiple logs together, create a new trace:
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 const trace = montelo.trace({ name: "Sample Trace" });
 
 await trace.anthropic.messages.create({
@@ -98,6 +143,24 @@ await montelo.openai.chat.completions.create({
 });
 ```
 
+```python Python
+trace = montelo.trace(name="Sample Trace")
+
+trace.openai.chat.completions.create(
+    name="Action 1",
+    model="gpt-3.5-turbo",
+    messages=[
+        {
+            "role": "user",
+            "content": "Tell me a joke about the person reading this.",
+        },
+    ],
+)
+```
+
+</CodeGroup>
+
+
 <video
   muted
   autoPlay
@@ -111,7 +174,9 @@ await montelo.openai.chat.completions.create({
 
 Create a dataset via our SDK.
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 const dataset = await montelo.datasets.create({
   name: "Sentiment analysis",
   description: "Sentiment analysis dataset for project X",
@@ -120,9 +185,23 @@ const dataset = await montelo.datasets.create({
 });
 ```
 
+```python Python
+dataset = montelo.datasets.create(
+    name="Sentiment analysis",
+    description="Sentiment analysis dataset for project X",
+    inputSchema={"sentence": "string"},
+    outputSchema={"sentiment": "string"},
+);
+```
+
+</CodeGroup>
+
+
 ## Upload datapoints
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 await montelo.datapoints.createMany({
   dataset: dataset.slug,
   datapoints: [
@@ -138,6 +217,25 @@ await montelo.datapoints.createMany({
 });
 ```
 
+```python Python
+montelo.datapoints.create_many(
+    dataset=dataset.slug,
+    datapoints=[
+    {
+      "input": { "sentence": "That was an awesome event." },
+      "expectedOutput": { "sentiment": "positive" }
+    },
+    {
+      "input": { "sentence": "That was a bad event." },
+      "expectedOutput": { "sentiment": "negative" }
+    }
+    ],
+);
+```
+
+</CodeGroup>
+
+
 ## Run an experiment
 
 Now that you have an uploaded dataset, you can run an experiment against it!
@@ -145,7 +243,9 @@ Now that you have an uploaded dataset, you can run an experiment against it!
 You supply a runner and an evaluator function that runs against each datapoint in the dataset. What you return from
 the runner and evaluator are then logged and tracked for you to analyze in Montelo.
 
-```typescript
+<CodeGroup>
+
+```typescript Node
 await montelo.experiments.createAndRun({
   name: "My First Experiment",
   description: "So exciting!",
@@ -161,6 +261,28 @@ await montelo.experiments.createAndRun({
   },
 });
 ```
+
+```python Python
+def runner(input, metadata):
+    sentiment = llm_request(input, metadata)
+    return {"sentiment": sentiment}
+
+
+def evaluator(input, expected_output, actual_output, metadata):
+    return {"is_correct": expected_output["sentiment"] == actual_output["sentiment"]}
+
+
+montelo.experiments.create_and_run(
+    name="My First Experiment",
+    description="So exciting!",
+    dataset=dataset.slug,
+    runner=runner,
+    evaluator=evaluator,
+);
+```
+
+</CodeGroup>
+
 
 ## Next Steps
 
