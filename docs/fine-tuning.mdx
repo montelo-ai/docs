@@ -126,7 +126,21 @@ Once that's done, visit the dataset page and click on fine-tune in the top right
   src="/assets/fine-tuning/finetuning.mp4"
 ></video>
 
-## Models
+## Inference
+
+### OpenAI & Cohere
+
+For OpenAI and Cohere models, simply follow their documentation to learn how to do inference on your fine-tuned models.
+
+- [OpenAI docs](https://platform.openai.com/docs/guides/fine-tuning/use-a-fine-tuned-model)
+
+- [Cohere docs](https://docs.cohere.com/docs/troubleshooting-a-fine-tuned-model#using-your-trained-model)
+
+### Llama
+
+For Llama, Montelo will provide a blazing fast inference endpoint that runs on [Fireworks.ai](https://fireworks.ai/).
+
+## Supported Models
 
 ### OpenAI
 
@@ -146,7 +160,3 @@ To fine-tune Cohere models, set your Cohere API key in the `API Keys` tab. Billi
 with your provided key. The fine-tuned model will be served from Cohere, not from Montelo.
 
 We support fine-tuning the `command-r` model.
-
-### Mistral
-
-Fine-tuning for Mistral models coming soon.
