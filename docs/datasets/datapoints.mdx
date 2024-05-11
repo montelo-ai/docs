@@ -57,7 +57,7 @@ await montelo.datapoints.create({
 montelo.datapoints.create(
   dataset="dataset-slug",
   input={ "topic": "Football" },
-  expectedOutput={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
+  expected_output={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
 )
 ```
 
@@ -96,7 +96,7 @@ montelo.datapoints.create_many(
     },
     {
       "input": { "topic": "Football" },
-      "expectedOutput": { "joke": "Why don't American football teams play soccer? Because they can't handle the competition without taking a timeout!" },
+      "expected_output": { "joke": "Why don't American football teams play soccer? Because they can't handle the competition without taking a timeout!" },
     },
   ],
 )
@@ -124,7 +124,7 @@ await montelo.datapoints.create({
 montelo.datapoints.create(
   dataset="dataset-slug",
   input={ "topic": "Football" },
-  expectedOutput={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
+  expected_output={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
   split="TEST"
 )
 ```
@@ -153,7 +153,7 @@ await montelo.datapoints.create({
 montelo.datapoints.create(
   dataset="dataset-slug",
   input={ "topic": "Football" },
-  expectedOutput={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
+  expected_output={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
   metadata={ "some": "metadata" }
 )
 ```
@@ -225,7 +225,7 @@ montelo.datapoints.create(
       }
     ]
   },
-  "expectedOutput": {
+  "expected_output": {
     "messages": [
       {
         "role": "assistant",
@@ -260,7 +260,7 @@ await montelo.datapoints.create<DInput, DOutput>({
 montelo.datapoints.create(
   dataset="dataset-slug",
   input={ "topic": "Football" },
-  expectedOutput={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
+  expected_output={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
 )
 ```
 
