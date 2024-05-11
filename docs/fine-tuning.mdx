@@ -4,13 +4,12 @@ description: Fine-tuning models can lower your costs and latency, and improve pe
 icon: sliders
 ---
 
-Fine-tuning on Montelo starts with a dataset. First, create a fine-tune dataset:
+## Explanation
 
-<Frame type="glass">
-  <img src="/assets/fine-tuning/ftmodal.png" alt="Runs Overview"/>
-</Frame>
+Fine-tuning on Montelo starts with a [fine-tune dataset](/docs/datasets/datasets#fine-tuning-dataset), which is a
+dataset that follows the OpenAI chat [format](https://platform.openai.com/docs/guides/fine-tuning/example-format).
 
-This is a special type of dataset that follows the OpenAI `messages` format. Here is an example fine-tune dataset.
+Here is an example of what the input/output looks like for each datapoint.
 
 The input to the datapoint should be:
 
@@ -23,6 +22,18 @@ The output to the datapoint should be:
 ```json
 {"messages": [{"role": "assistant", "content": "Paris, as if everyone doesn't know that already."}]}
 ```
+
+## Fine-tuning on a dataset
+
+### Create the fine-tune dataset
+
+First, create a fine-tune dataset via the UI or the SDK.
+
+<Frame type="glass">
+  <img src="/assets/fine-tuning/ftmodal.png" alt="Runs Overview"/>
+</Frame>
+
+### Upload datapoints
 
 Upload datapoints to this dataset in the following way:
 
@@ -84,4 +95,40 @@ montelo.datapoints.create(
 
 </CodeGroup>
 
-Once that's done, you can go ahead and click fine-tune in the UI, and it'll start the fine-tune!
+### Start the fine-tune
+
+Once that's done, visit the dataset page and click on fine-tune in the top right. Choose a model, and start fine-tuning!
+
+<video
+  muted
+  autoPlay
+  loop
+  playsInline
+  className="w-full aspect-video"
+  src="/assets/fine-tuning/finetuning.mp4"
+></video>
+
+## Models
+
+### OpenAI
+
+To fine-tune OpenAI models, set your OpenAI API key in the `API Keys` tab. Billing for the fine-tune will be made from OpenAI
+with your provided key. The fine-tuned model will be served from OpenAI, not from Montelo.
+
+We support fine-tuning the latest `gpt-3.5-turbo` model.
+
+### LLama
+
+We support fine-tuning models `llama-3-8b` and `llama-3-70b`. Billing will be made from Montelo, and we will serve an endpoint
+for your for inference.
+
+### Cohere
+
+To fine-tune Cohere models, set your Cohere API key in the `API Keys` tab. Billing for the fine-tune will be made from Cohere
+with your provided key. The fine-tuned model will be served from Cohere, not from Montelo.
+
+We support fine-tuning the `command-r` model.
+
+### Mistral
+
+Fine-tuning for Mistral models coming soon.
