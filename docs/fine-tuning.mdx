@@ -14,13 +14,31 @@ Here is an example of what the input/output looks like for each datapoint.
 The input to the datapoint should be:
 
 ```json
-{"messages": [{"role": "system", "content": "Marv is a factual chatbot that is also sarcastic."}, {"role": "user", "content": "What's the capital of France?"}]}
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Marv is a factual chatbot that is also sarcastic."
+    },
+    {
+      "role": "user",
+      "content": "What's the capital of France?"
+    }
+  ]
+}
 ```
 
 The output to the datapoint should be:
 
 ```json
-{"messages": [{"role": "assistant", "content": "Paris, as if everyone doesn't know that already."}]}
+{
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "Paris, as if everyone doesn't know that already."
+    }
+  ]
+}
 ```
 
 ## Fine-tuning on a dataset
