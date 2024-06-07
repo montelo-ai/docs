@@ -38,21 +38,17 @@
       "group": "Getting Started",
       "pages": [
         "docs/general/welcome",
-        "docs/general/concepts",
-        "docs/general/quickstart",
-        "docs/general/typescript",
-        "docs/general/faq"
+        "docs/general/quickstart"
       ]
     },
     {
       "group": "Features",
       "pages": [
-        "docs/traces/traces",
         "docs/datasets/datasets",
         "docs/datasets/datapoints",
         "docs/experiments/experiments",
         "docs/fine-tuning",
-        "docs/self-hosting"
+        "docs/inference"
       ]
     },
     {

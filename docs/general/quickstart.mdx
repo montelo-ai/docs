@@ -1,294 +1,93 @@
 ---
 title: Quickstart
-description: Let’s get you up and running with Montelo in under 2 minutes.
 icon: play
 ---
+
+This quickstart will go over generating synthetic data and fine-tuning Llama-3 to classify financial newspaper tiles as
+`positive`/`negative`/`neutral`.
 
 ## Sign up for Montelo
 
 To get started, you need to first [sign up](https://app.montelo.ai/auth/register) for a **free** account.
 
-## Installing the SDK
 
-Start by installing Montelo.
+## Input Your OpenAI API Key
 
-<CodeGroup>
+Montelo uses your OpenAI API key to generate synthetic data. Input your OpenAI key on the dashboard to get started.
 
-```sh Node
-npm install montelo
-```
+## Generate Synthetic Data
 
-```sh Python
-pip install montelo
-```
+### Concept
 
-</CodeGroup>
+Datasets on Montelo follow the [OpenAI conversation format](https://platform.openai.com/docs/guides/fine-tuning/example-format).
+Each datapoint within a dataset has an input and an expected output that is of the format `{ messages: Message[] }`.
 
-
-## API Keys
-
-After setting up your account, you can find your API key for the environment you want to use from the dashboard.
-
-<video
-  muted
-  autoPlay
-  loop
-  playsInline
-  className="w-full aspect-video"
-  src="/assets/apikey.mp4"
-></video>
-
-<Note>Each project has several environments, and each environment has it’s own API Key.</Note>
-
-When developing in a team, it's a good idea to create a new environment for each developer.
-This way, developers can work independently without interfering with each other's work.
-
-With your API key in hand, you can now set up the SDK.
-Either include the API key as an environment variable called `MONTELO_API_KEY` or pass it as an argument to the `Montelo` constructor.
-
-```dotenv .env
-MONTELO_API_KEY=your-api-key
-OPENAI_API_KEY=your-openai-api-key
-```
-
-## Replace OpenAI/Anthropic/Mistral calls with Montelo
-
-Now that you have the SDK set up, you can start using Montelo to collect production requests. First, simply replace
-OpenAI/Anthropic/Mistral calls with Montelo, just by adding `montelo.` to the beginning of the call.
-
-For example, to call OpenAI:
+Here is an example input/output pair of a datapoint.
 
 <CodeGroup>
 
-```typescript Node
-import { Montelo } from "montelo";
-
-const montelo = new Montelo();
-
-await montelo.openai.chat.completions.create({
-  model: "gpt-3.5-turbo",
-  messages: [
+```json Input
+{
+  "messages": [
     {
-      role: "system",
-      content: "You are a helpful assistant.",
+      "role": "system",
+      "content": "Marv is a factual chatbot that is also sarcastic."
     },
     {
-      role: "user",
-      content: "What is the meaning of life?",
-    },
+      "role": "user",
+      "content": "What's the capital of France?"
+    }
   ]
-});
+}
 ```
 
-```python Python
-from montelo import Montelo, MonteloClientOptions, OpenAIClientConfig
-
-montelo = Montelo(
-    montelo=MonteloClientOptions(
-        # This is the default and can be omitted
-        api_key=os.getenv("MONTELO_API_KEY")
-    ),
-    openai_config=OpenAIClientConfig(
-        # This is the default and can be omitted
-        api_key=os.getenv("OPENAI_API_KEY")
-    )
-)
-
-montelo.openai.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {
-            "role": "system",
-            "content": "You are a helpful assistant."
-        },
-        {
-            "role": "user",
-            "content": "What is the meaning of life?"
-        }
-    ],
-)
-```
-
-</CodeGroup>
-
-
-## Start a trace
-
-To trace multiple logs together, create a new trace:
-
-<CodeGroup>
-
-```typescript Node
-const trace = montelo.trace({ name: "Sample Trace" });
-
-await trace.anthropic.messages.create({
-  name: "Action 1",
-  model: "claude-3-sonnet-20240229",
-  messages: [{ role: "user", content: "Tell me a joke about the person reading this." }],
-  max_tokens: 100,
-});
-
-await trace.mistral.chat({
-  name: "Action 2",
-  model: "mistral-tiny",
-  messages: [{ role: "user", content: "Tell me a joke about the person reading this." }],
-});
-
-await montelo.openai.chat.completions.create({
-  name: "Action 3",
-  model: "gpt-3.5-turbo",
-  messages: [
-    { role: "user", content: "Tell me a joke about the person reading this." },
-  ],
-});
-```
-
-```python Python
-trace = montelo.trace(name="Sample Trace")
-
-trace.openai.chat.completions.create(
-    name="Action 1",
-    model="gpt-3.5-turbo",
-    messages=[
-        {
-            "role": "user",
-            "content": "Tell me a joke about the person reading this.",
-        },
-    ],
-)
-```
-
-</CodeGroup>
-
-
-<video
-  muted
-  autoPlay
-  loop
-  playsInline
-  className="w-full aspect-video"
-  src="/assets/trace.mp4"
-></video>
-
-## Create a dataset
-
-Create a dataset via our SDK.
-
-<CodeGroup>
-
-```typescript Node
-const dataset = await montelo.datasets.create({
-  name: "Sentiment analysis",
-  description: "Sentiment analysis dataset for project X",
-  inputSchema: { sentence: "string" },
-  outputSchema: { sentiment: "string" },
-});
-```
-
-```python Python
-dataset = montelo.datasets.create(
-    name="Sentiment analysis",
-    description="Sentiment analysis dataset for project X",
-    inputSchema={"sentence": "string"},
-    outputSchema={"sentiment": "string"},
-);
-```
-
-</CodeGroup>
-
-
-## Upload datapoints
-
-<CodeGroup>
-
-```typescript Node
-await montelo.datapoints.createMany({
-  dataset: dataset.slug,
-  datapoints: [
+```json Output
+{
+  "messages": [
     {
-      input: { sentence: "That was an awesome event." },
-      expectedOutput: { sentiment: "positive" }
-    },
-    {
-      input: { sentence: "That was a bad event." },
-      expectedOutput: { sentiment: "negative" }
+      "role": "assistant",
+      "content": "Paris, as if everyone doesn't know that already."
     }
-  ],
-});
-```
-
-```python Python
-montelo.datapoints.create_many(
-    dataset=dataset.slug,
-    datapoints=[
-    {
-      "input": { "sentence": "That was an awesome event." },
-      "expectedOutput": { "sentiment": "positive" }
-    },
-    {
-      "input": { "sentence": "That was a bad event." },
-      "expectedOutput": { "sentiment": "negative" }
-    }
-    ],
-);
+  ]
+}
 ```
 
 </CodeGroup>
 
-
-## Run an experiment
-
-Now that you have an uploaded dataset, you can run an experiment against it!
-
-You supply a runner and an evaluator function that runs against each datapoint in the dataset. What you return from
-the runner and evaluator are then logged and tracked for you to analyze in Montelo.
+With that in mind, to generate a dataset for classifying financial newspaper tiles as `positive`/`negative`/`neutral`,
+we can use the following prompts:
 
 <CodeGroup>
 
-```typescript Node
-await montelo.experiments.createAndRun({
-  name: "My First Experiment",
-  description: "So exciting!",
-  dataset: dataset.slug,
-  runner: async ({ input, metadata }) => {
-    const sentiment = await llmRequest(input, metadata);
-    return { sentiment }
-  },
-  evaluator: async ({ input, expectedOutput, actualOutput, metadata }) => {
-    return {
-      isCorrect: expectedOutput.sentiment === actualOutput.sentiment,
-    }
-  },
-});
-```
+  ```json Input
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are given the task of classifying a sentence as Neutral, Negative, or Positive. First, try to reason over the problem, then come up with the answer. Return your answer in JSON format as { \"reasoning\", \"label\" }. Be brief and concise in your reasoning."
+      },
+      {
+        "role": "user",
+        "content": "Sentence: Pretax profit rose to EUR 1,019 mn from EUR 1,007 in the corresponding period in 2005."
+      }
+    ]
+  }
+  ```
 
-```python Python
-def runner(input, metadata):
-    sentiment = llm_request(input, metadata)
-    return {"sentiment": sentiment}
-
-
-def evaluator(input, expected_output, actual_output, metadata):
-    return {"is_correct": expected_output["sentiment"] == actual_output["sentiment"]}
-
-
-montelo.experiments.create_and_run(
-    name="My First Experiment",
-    description="So exciting!",
-    dataset=dataset.slug,
-    runner=runner,
-    evaluator=evaluator,
-);
-```
+  ```json Output
+  {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "{\n  \"reasoning\": \"The profit increased from EUR 1,007 million to EUR 1,019 million, indicating growth.\",\n  \"label\": \"Positive\"\n}"
+      }
+    ]
+  }
+  ```
 
 </CodeGroup>
 
+We are using Chain of Thought prompting to have the LLM reason over the sentence before giving the answer.
 
-## Next Steps
-
-Check out our [blog posts](https://montelo.ai/blog) to learn more about:
-
-- Classification using fine-tuned GPT-3.5 ([link](https://www.montelo.ai/blog/classification-using-fine-tuned-gpt3-5-in-typescript))
-- Integrating with the Vercel AI SDK ([link](https://www.montelo.ai/blog/montelo-vercel-ai-sdk-v3-tutorial))
-- View the code for complete examples in our `examples` [repo](https://github.com/montelo-org/examples)
+### Implement
 

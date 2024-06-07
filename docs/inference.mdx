@@ -1,0 +1,25 @@
+---
+title: Inference
+description: Serverless inference for your fine-tuned models on Montelo.
+icon: bolt
+---
+
+## Explanation
+
+<CodeGroup>
+
+  ```typescript Node
+const completion = await montelo.client.chat({
+    model: "model-id",
+    messages: [],
+});
+  ```
+
+  ```python Python
+  completion = montelo.client.chat(
+    model="model-id",
+    messages=[],
+  )
+  ```
+
+</CodeGroup>
