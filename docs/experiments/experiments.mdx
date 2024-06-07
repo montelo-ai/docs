@@ -6,73 +6,77 @@ icon: flask
 
 ## Explanation
 
-Experiments allow you to evaluate the performance of your LLMs on specific [datasets](/datasets/datasets).
-By running experiments, you can gain insights into how well your models perform on various tasks and identify areas for improvement.
+Experiments allow you to evaluate the performance of your fine-tunes on specific [datasets](/datasets/datasets).
+By running experiments, you can gain insights into how well your models performed relative to other models.
 
 ## Pre-requisites
 
-You'll need a [datasets](/datasets/datasets) uploaded to Montelo to get started. Remember, an experiment is always
+You'll need a [dataset](/datasets/datasets) uploaded to Montelo to get started. Remember, an experiment is always
 associated to a dataset.
 
-You'll also need a `runner` and an `evaluator` function. We'll look at a classification example where the following
-datapoints have been uploaded:
-
-<CodeGroup>
+You'll also need a `runner` and an `evaluator` function. Here's a simple example
 
 ```typescript Node
-await montelo.datapoints.createMany({
-  dataset: dataset.slug,
-  datapoints: [
-    {
-      input: { sentence: "That was an awesome event." },
-      expectedOutput: { sentiment: "positive" }
-    },
-    {
-      input: { sentence: "That was a bad event." },
-      expectedOutput: { sentiment: "negative" }
-    }
-  ],
+import { Evaluator, Montelo, Runner } from "montelo";
+
+const montelo = new Montelo();
+const openai = new OpenAI();
+
+type MetadataT = null;
+
+type EvalT = {
+  isCorrect: boolean;
+};
+
+const dataset = "dataset-id";
+
+const gpt4Runner: Runner<MetadataT> = async (params) => {
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4-turbo",
+    messages: params.input.messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
+  });
+  const message = completion.choices[0].message;
+  return { messages: [message] };
+};
+
+const evaluator: Evaluator<EvalT, MetadataT> = async (params) => {
+  const { expectedOutput, actualOutput } = params;
+
+  const expectedOut = expectedOutput.messages[0].content;
+  const actualOut = actualOutput.messages[0].content;
+
+  return { isCorrect: expectedOut === actualOut };
+};
+
+await montelo.experiments.createAndRun({
+  name: "GPT-4",
+  dataset,
+  runner: gpt4Runner,
+  evaluator,
+  options,
 });
 ```
-
-```python Python
-montelo.datapoints.create_many(
-  dataset=dataset.slug,
-  datapoints=[
-    {
-      "input": { "sentence": "That was an awesome event." },
-      "expectedOutput": { "sentiment": "positive" }
-    },
-    {
-      "input": { "sentence": "That was a bad event." },
-      "expectedOutput": { "sentiment": "negative" }
-    }
-  ],
-)
-```
-</CodeGroup>
 
 
 ### Runner
 
-The `runner` function runs the datapoint's input and returns the output. In the example above, the `runner` would take
-the sentence as input, and has to return a sentiment. Here's the most basic example of this:
+The `runner` function runs the datapoint's input and returns the output. Here's the most basic example of this:
 
 <CodeGroup>
 
 ```typescript Node
 const runner = async (sentence: string): string => {
-  // call an llm to perform the classification
-  const sentiment = await llmCall(sentence);
-  return sentiment;
+  // any llm call
+  const message = await llmCall(sentence);
+  return { messages: [message] };
 };
 ```
 
 ```python Python
 def runner(sentence: str):
-    # call an llm to perform the classification
-    sentiment = llm_call(sentence)
-    return dict(sentiment=sentiment)
+    # any llm call
+    message = llm_call(sentence)
+    return dict(messages=[message])
 ```
 
 </CodeGroup>
@@ -84,22 +88,28 @@ like above.
 ### Evaluator
 
 The `evaluator` function takes the datapoint's expected output, and the output that the `runner` returned, and runs an evaluation on it. Again, you could run any
-evaluation you want! Evaluations are just functions at the end of the day.
+evaluation you want!
 
-Note that you must return an object, not a primitive, for evaluators. Here's an example
+Note that you must return an object, not a primitive, for evaluators. Here's an example:
 
 <CodeGroup>
 ```typescript Node
-const evaluator = (goldSentiment: string, predictedSentiment) => {
-  return {
-    isCorrect: goldSentiment === predictedSentiment,
-  };
+type MetadataT = null;
+
+type EvalT = {
+  isCorrect: boolean;
+  error: boolean;
+};
+
+const evaluator: Evaluator<EvalT, MetadataT> = async (params) => {
+  const { expectedOutput, actualOutput } = params;
+  return { isCorrect: actualOutput === expectedOutput };
 };
 ```
 
 ```python Python
-def evaluator(gold_sentiment: str, predicted_sentiment: str):
-    return dict(is_correct=gold_sentiment == predicted_sentiment)
+def evaluator(params):
+    return dict(is_correct=params["expected_output"] == params["actual_output"])
 ```
 </CodeGroup>
 
@@ -116,34 +126,25 @@ We'll take the object that you return, and run statistics and create charts for 
 
 ## Running an Experiment
 
-Now that you have a `runner` and an `evaluator`, let's run our experiment!
+Now that you have a `runner` and an `evaluator`, use the `createAndRun` to create an experiment and run it.
 
 <CodeGroup>
 
 ```typescript Node
-type Input = { sentence: string };
-type Output = { sentiment: string };
-type Eval = { isCorrect: boolean };
-
-await montelo.experiments.createAndRun<Input, Output, Eval>({
+await montelo.experiments.createAndRun({
   name: "Experiment",
-  dataset: "dataset-slug",
-  runner: async ({ input, metadata }) => {
-    const sentiment = await runner(input.sentence);
-    return { sentiment };
-  },
-  evaluator: async ({ input, expectedOutput, actualOutput, metadata }) => {
-    return evaluator(expectedOutput.sentiment, actualOutput.sentiment);
-  },
+  dataset: "dataset-id",
+  runner,
+  evaluator,
 });
 ```
 
 ```python Python
 montelo.experiments.create_and_run(
   name="Experiment",
-  dataset="dataset-slug",
-  runner=lambda input: {"sentiment": runner(input["sentence"])},
-  evaluator=lambda expected_output, actual_output: evaluator(expected_output["sentiment"], actual_output["sentiment"]),
+  dataset="dataset-id",
+  runner=runner,
+  evaluator=evaluator,
 )
 ```
 
@@ -155,15 +156,6 @@ And that's all you need! Behind the scenes, Montelo will pull all the datapoints
 
 We'll inject each datapoint's input, metadata, and expected output into your `runner` and `evaluator`, and track the
 data that you return.
-
-<video
-  muted
-  autoPlay
-  loop
-  playsInline
-  className="w-full aspect-video"
-  src="/assets/experiment.mp4"
-></video>
 
 ### Options
 
