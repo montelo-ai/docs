@@ -1,115 +1,21 @@
 ---
 title: Datasets
-description: A dataset is a collection of datapoints that adhere to an input/output schema.
+description: A dataset is a collection of datapoints to be used for fine-tuning.
 icon: database
 ---
-
-<Frame type="glass">
-![Sample Datasets](/assets/datasets/example.png)
-</Frame>
-
-Datasets are integral to evaluating LLMs in Montelo.
-You can create datasets to evaluate the performance of your LLMs on specific tasks.
-
-## Explanation
-
-A dataset is a collection of [datapoints](/datasets/datapoints) that adhere to an input and expected output schema. For example,
-consider a dataset where the input is a topic of interest, and the expected output is an article about that topic:
-
-```typescript
-Input Schema:
-{
-  topic: "string"
-}
-
-Expected output Schema:
-{
-  article: "string"
-}
-```
-
-Every datapoint in this dataset will have a `topic` field in the input and an `article` field in the output.
-
-You can then run [experiments](/experiments/experiments) against this dataset to evaluate the performance of your LLMs.
-
-### Schema Types
-
-The dataset schema is an object of key-value pairs, where the key is the field name and the value is the field type.
-
-Montelo supports the following field types:
-
-- `string`
-- `number`
-- `boolean`
-
-So you can create schemas like:
-
-```typescript
-const schema = {
-  topic: "string",
-  pages: "number",
-  isFunny: "boolean",
-};
-```
-
-## Slug
-
-When you create a dataset, Montelo will also create a unique slug derived from it's name.
-You will use the slug when uploading datapoints or running an experiment:
-
-<CodeGroup>
-
-```typescript Node
-await montelo.datapoints.createMany({
-  dataset: "", // slug goes here
-  datapoints: formattedDatapoints,
-});
-
-await montelo.experiments.createAndRun({
-  name: "Example",
-  dataset: "", // slug goes here
-  runner,
-  evaluator,
-});
-```
-
-```python Python
-montelo.datapoints.create_many(
-  dataset="", // slug goes here
-  datapoints=formattedDatapoints,
-)
-
-montelo.experiments.create_and_run(
-  name="Example",
-  dataset="", // slug goes here
-  runner=runner,
-  evaluator=evaluator,
-)
-```
-
-</CodeGroup>
-
-
-You can find the dataset slug on the dataset ID page.
-
-<Frame type="glass">
-![Slug](/assets/datasets/slug.png)
-</Frame>
 
 ## Creating a Dataset
 
 ### Via the SDK
 
-To create a dataset, run `montelo.datasets.create`;
+To create a dataset, use `montelo.datasets.create`;
 
 <CodeGroup>
 
 ```typescript Node
 const dataset = await montelo.datasets.create({
   name: "Article Dataset",
-  description: "Datasets for AI articles",
-  inputSchema: { topic: "string" },
-  outputSchema: { article: "string" },
+  description: "Datasets for AI articles"
 });
 ```
 
@@ -117,8 +23,6 @@ const dataset = await montelo.datasets.create({
 dataset = montelo.datasets.create(
   name="Article Dataset",
   description="Datasets for AI articles",
-  inputSchema=dict(topic="string"),
-  outputSchema=dict(article="string"),
 )
 ```
 </CodeGroup>
@@ -129,134 +33,5 @@ dataset = montelo.datasets.create(
 You can create a dataset via the UI by navigating to the Datasets page and clicking on the `Create Dataset` button.
 
 <Frame type="glass">
-  <img src="/assets/CreateDataset.png"/>
+  <img src="/assets/datasets/create.png"/>
 </Frame>
-
-## Fine-Tuning Dataset
-
-A Fine-Tuning dataset is a dataset designated for fine-tuning. Only fine-tuning datasets can be fine-tuned.
-
-The difference between a fine-tuning dataset and a regular dataset is that the fine-tuning dataset has a pre-set schema
-that adheres to the OpenAI fine-tuning [format](https://platform.openai.com/docs/guides/fine-tuning/example-format).
-
-More specifically, each datapoint in the dataset must have an input/output that follows this schema:
-
-```json
-{
-  "messages": {
-    "type": "array",
-    "items": {
-      "type": "object",
-      "properties": {
-        "role": "string",
-        "content": "string"
-      }
-    }
-  }
-}
-```
-
-Here's an example datapoint:
-
-<CodeGroup>
-
-```typescript Node
-await montelo.datapoints.create({
-  dataset: "dataset-slug",
-  input: {
-    messages: [
-      {
-        role: "system",
-        content: "Marv is a factual chatbot that is also sarcastic."
-      },
-      {
-        role: "user",
-        content: "What's the capital of France?"
-      }
-    ]
-  },
-  expectedOutput: {
-    messages: [
-      {
-        role: "assistant",
-        content: "Paris, as if everyone doesn't know that already."
-      }
-    ]
-  },
-});
-```
-
-```python Python
-montelo.datapoints.create(
-  dataset="dataset-slug",
-  input={
-    "messages": [
-      {
-        "role": "system",
-        "content": "Marv is a factual chatbot that is also sarcastic."
-      },
-      {
-        "role": "user",
-        "content": "What's the capital of France?"
-      }
-    ]
-  },
-  expected_output={
-    "messages": [
-      {
-        "role": "assistant",
-        "content": "Paris, as if everyone doesn't know that already."
-      }
-    ]
-  },
-)
-```
-
-</CodeGroup>
-
-### Creating a Fine-Tuning Dataset
-
-You can create a fine-tune dataset using the `createFineTune` method, or from the UI by clicking on the Fine-Tune
-tab when creating a dataset.
-
-<CodeGroup>
-
-```typescript Node
-const dataset = await montelo.datasets.createFineTune({
-  name: "Fine-Tuning Dataset",
-  description: "Some description",
-});
-```
-
-```python Python
-dataset = montelo.datasets.create_fine_tune(
-  name="Fine-Tuning Dataset",
-  description="Some description",
-)
-```
-
-</CodeGroup>
-
-
-## Evaluating a Dataset
-
-See [Experiments](/docs/experiments/experiments).
-
-## FAQ
-
-### Why does my dataset need a schema?
-
-A dataset with no schema becomes very messy, very quickly. The schema ensures that all datapoints within the dataset
-conform and are alike, making it easier to run evals and analysis on your datasets and experiments.
-
-### Why can't I fine-tune any dataset?
-
-Fine-tuning datasets adhere to the OpenAI fine-tuning [format](https://platform.openai.com/docs/guides/fine-tuning/example-format).
-
-If the dataset is not of this specific format, it cannot be fine-tuned. That is why we make an explicit distinction
-between the two.
-
-### How do I turn my dataset into a fine-tune dataset?
-
-You'll have to do this manually by getting all the datapoints for the dataset, formatting them, then creating a new
-fine-tune dataset and uploading the formatted datapoints.

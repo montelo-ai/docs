@@ -6,33 +6,34 @@ icon: circle-dot
 
 ## Explanation
 
-Each datapoint represents a single input-output pair that adheres to the schema defined by the [dataset](/datasets/datasets) it belongs to.
+Each datapoint represents a single input-output pair.
 
-The input represents the data that will be provided to the LLM during evaluation, while the expected output represents the desired result.
+The input represents the data that will be provided to the LLM, and the expected output represents the desired result. Both
+must adhere to the OpenAI chat [format](https://platform.openai.com/docs/guides/fine-tuning/example-format).
 
-For example, consider a dataset with the following schema:
-
-```typescript
-Input Schema:
-{
-  topic: "string"
-}
-
-Expected output Schema:
-{
-  article: "string"
-}
-```
-
-A datapoint in this dataset could look like this:
+For example, a datapoint could look like:
 
 ```json
 {
   "input": {
-    "topic": "The importance of AI in modern society"
+    "messages": [
+      {
+        "role": "system",
+        "content": "Marv is a factual chatbot that is also sarcastic."
+      },
+      {
+        "role": "user",
+        "content": "What's the capital of France?"
+      }
+    ]
   },
   "expectedOutput": {
-    "article": "AI has become increasingly important in modern society ..."
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "Paris, as if everyone doesn't know that already."
+      }
+    ]
   }
 }
 ```
@@ -47,17 +48,17 @@ To create a single datapoint:
 
 ```typescript Node
 await montelo.datapoints.create({
-  dataset: "dataset-slug",
-  input: { topic: "Football" },
-  expectedOutput: { joke: "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
+  dataset: "dataset-id",
+  input: { messages: [{"role": "system", "content": "Marv is a factual chatbot that is also sarcastic."}, {"role": "user", "content": "Who wrote 'Romeo and Juliet'?"}] },
+  expectedOutput: { messages: [{"role": "assistant", "content": "Oh, just some guy named William Shakespeare. Ever heard of him?"}] },
 });
 ```
 
 ```python Python
 montelo.datapoints.create(
-  dataset="dataset-slug",
-  input={ "topic": "Football" },
-  expected_output={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
+  dataset="dataset-id",
+  input={ "messages": [{"role": "system", "content": "Marv is a factual chatbot that is also sarcastic."}, {"role": "user", "content": "Who wrote 'Romeo and Juliet'?"}] },
+  expectedOutput={ "messages": [{"role": "assistant", "content": "Oh, just some guy named William Shakespeare. Ever heard of him?"}] },
 )
 ```
 
@@ -70,37 +71,29 @@ To create many datapoints in a single efficient operation:
 
 <CodeGroup>
 
-```typescript Node
-await montelo.datapoints.createMany({
-  dataset: "dataset-slug",
-  datapoints: [
-    {
-      input: { topic: "Soccer" },
-      expectedOutput: { joke: "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
-    },
-    {
-      input: { topic: "Football" },
-      expectedOutput: { joke: "Why don't American football teams play soccer? Because they can't handle the competition without taking a timeout!" },
-    },
-  ],
-});
-```
+  ```typescript Node
+  await montelo.datapoints.createMany({
+    dataset: "dataset-id",
+    datapoints: [
+      {
+        input: { messages: [{"role": "system", "content": "Marv is a factual chatbot that is also sarcastic."}, {"role": "user", "content": "Who wrote 'Romeo and Juliet'?"}] },
+        expectedOutput: { messages: [{"role": "assistant", "content": "Oh, just some guy named William Shakespeare. Ever heard of him?"}] },
+      }
+    ]
+  });
+  ```
 
-```python Python
-montelo.datapoints.create_many(
-  dataset="dataset-slug",
-  datapoints=[
-    {
-      "input": { "topic": "Soccer" },
-      "expectedOutput": { "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
-    },
-    {
-      "input": { "topic": "Football" },
-      "expected_output": { "joke": "Why don't American football teams play soccer? Because they can't handle the competition without taking a timeout!" },
-    },
-  ],
-)
-```
+  ```python Python
+  montelo.datapoints.create_many(
+    dataset="dataset-id",
+    datapoints=[
+      {
+        "input": { "messages": [{"role": "system", "content": "Marv is a factual chatbot that is also sarcastic."}, {"role": "user", "content": "Who wrote 'Romeo and Juliet'?"}] },
+        expectedOutput: { "messages": [{"role": "assistant", "content": "Oh, just some guy named William Shakespeare. Ever heard of him?"}] },
+      }
+    ],
+  )
+  ```
 
 </CodeGroup>
 
@@ -132,7 +125,7 @@ montelo.datapoints.create(
 </CodeGroup>
 
 
-This is useful for when you've fine-tuned a model on the train split, and want to run experiments and evaluations on the test split.
+Only the datapoints in the train split will be used for finetuning. The test datapoints are used for experiments.
 
 ## Metadata
 
@@ -159,127 +152,3 @@ montelo.datapoints.create(
 ```
 
 </CodeGroup>
-
-
-## Fine-Tuning
-
-Each datapoint in a fine-tune dataset must have an input/output that follows this schema:
-
-```json
-{
-  "messages": {
-    "type": "array",
-    "items": {
-      "type": "object",
-      "properties": {
-        "role": "string",
-        "content": "string"
-      }
-    }
-  }
-}
-```
-
-Here's an example datapoint:
-
-<CodeGroup>
-
-```typescript Node
-await montelo.datapoints.create({
-  dataset: "dataset-slug",
-  input: {
-    messages: [
-      {
-        role: "system",
-        content: "Marv is a factual chatbot that is also sarcastic."
-      },
-      {
-        role: "user",
-        content: "What's the capital of France?"
-      }
-    ]
-  },
-  expectedOutput: {
-    messages: [
-      {
-        role: "assistant",
-        content: "Paris, as if everyone doesn't know that already."
-      }
-    ]
-  },
-});
-```
-
-```python Python
-montelo.datapoints.create(
-  dataset="dataset-slug",
-  input={
-    "messages": [
-      {
-        "role": "system",
-        "content": "Marv is a factual chatbot that is also sarcastic."
-      },
-      {
-        "role": "user",
-        "content": "What's the capital of France?"
-      }
-    ]
-  },
-  "expected_output": {
-    "messages": [
-      {
-        "role": "assistant",
-        "content": "Paris, as if everyone doesn't know that already."
-      }
-    ]
-  },
-)
-```
-
-</CodeGroup>
-
-
-## Types
-
-You may supply types to the methods `datapoints.create` and `datapoints.createMany`, like this:
-
-<CodeGroup>
-
-```typescript Node
-type DInput = { topic: string };
-type DOutput = { joke: string };
-
-await montelo.datapoints.create<DInput, DOutput>({
-  dataset: "dataset-slug",
-  input: { topic: "Football" },
-  expectedOutput: { joke: "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
-});
-```
-
-```python Python
-montelo.datapoints.create(
-  dataset="dataset-slug",
-  input={ "topic": "Football" },
-  expected_output={ "joke": "Why did the soccer ball quit the team? Because it was tired of being kicked around!" },
-)
-```
-
-</CodeGroup>
-
-
-This will make it so that TypeScript will complain if `input` does not match `DInput`, or if `expectedOutput` does not
-match `DOutput`.
-
-## FAQ
-
-### Does a datapoint have to be associated to a dataset?
-
-Yes, each datapoint belongs to one dataset.
-
-### Can I import a dataset directly from HuggingFace?
-
-We don't support this yet.
-
-### Are the types required?
-
-No! They're optional, but preferred.
