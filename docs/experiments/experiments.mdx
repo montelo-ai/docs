@@ -1,28 +1,13 @@
 ---
 title: Experiments & Evals
-description: Run an experiment to evaluate your LLMs.
+description: Run an experiment to evaluate your fine-tuned models.
 icon: flask
 ---
-
-<video
-  muted
-  autoPlay
-  loop
-  playsInline
-  className="w-full aspect-video"
-  src="/assets/experiment.mp4"
-></video>
 
 ## Explanation
 
 Experiments allow you to evaluate the performance of your LLMs on specific [datasets](/datasets/datasets).
 By running experiments, you can gain insights into how well your models perform on various tasks and identify areas for improvement.
-
-### Why do I need this?
-
-AI is non-deterministic and therefore unpredictable. The inputs and outputs you get when developing your application
-will be unlike the inputs and outputs you get when you ship your application to production. In order to deploy safe AI, you need
- *careful* evaluation and monitoring during the development phase. This is where our experiments can help.
 
 ## Pre-requisites
 
@@ -192,36 +177,3 @@ You can pass in `options` to the `createAndRun` function:
   Only run the experiment on the test datapoints, skipping the train datapoints.
 </ParamField>
 
-## Analyzing Experiment Results
-
-You can analyze the results of your evaluations on our UI.
-
-<video
-  muted
-  autoPlay
-  loop
-  playsInline
-  className="w-full aspect-video"
-  src="/assets/experimentanalysis.mp4"
-></video>
-
-## Debugging Runners
-
-In your `runner`, we recommend you start a [trace](/docs/traces/traces) at the start of your runner. Montelo will pickup
-that trace, and display it for you alongside the run in the UI, so you can debug what went wrong in your experiment!
-
-<video
-  muted
-  autoPlay
-  loop
-  playsInline
-  className="w-full aspect-video"
-  src="/assets/debuggingexperiment.mp4"
-></video>
-
-## FAQ
-
-### Where do traces inside the runner show up on the UI?
-
-Traces inside a runner will only show up on the run that it's associated to, and not on the dashboard or the `Traces`
-page, which are dedicated for production traces and analytics.
