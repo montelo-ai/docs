@@ -3,91 +3,13 @@ title: Quickstart
 icon: play
 ---
 
-This quickstart will go over generating synthetic data and fine-tuning Llama-3 to classify financial newspaper tiles as
-`positive`/`negative`/`neutral`.
-
-## Sign up for Montelo
-
-To get started, you need to first [sign up](https://app.montelo.ai/auth/register) for a **free** account.
-
-
-## Input Your OpenAI API Key
-
-Montelo uses your OpenAI API key to generate synthetic data. Input your OpenAI key on the dashboard to get started.
-
-## Generate Synthetic Data
-
-### Concept
-
-Datasets on Montelo follow the [OpenAI conversation format](https://platform.openai.com/docs/guides/fine-tuning/example-format).
-Each datapoint within a dataset has an input and an expected output that is of the format `{ messages: Message[] }`.
-
-Here is an example input/output pair of a datapoint.
-
-<CodeGroup>
-
-```json Input
-{
-  "messages": [
-    {
-      "role": "system",
-      "content": "Marv is a factual chatbot that is also sarcastic."
-    },
-    {
-      "role": "user",
-      "content": "What's the capital of France?"
-    }
-  ]
-}
-```
-
-```json Output
-{
-  "messages": [
-    {
-      "role": "assistant",
-      "content": "Paris, as if everyone doesn't know that already."
-    }
-  ]
-}
-```
-
-</CodeGroup>
-
-With that in mind, to generate a dataset for classifying financial newspaper tiles as `positive`/`negative`/`neutral`,
-we can use the following prompts:
-
-<CodeGroup>
-
-  ```json Input
-  {
-    "messages": [
-      {
-        "role": "system",
-        "content": "You are given the task of classifying a sentence as Neutral, Negative, or Positive. First, try to reason over the problem, then come up with the answer. Return your answer in JSON format as { \"reasoning\", \"label\" }. Be brief and concise in your reasoning."
-      },
-      {
-        "role": "user",
-        "content": "Sentence: Pretax profit rose to EUR 1,019 mn from EUR 1,007 in the corresponding period in 2005."
-      }
-    ]
-  }
-  ```
-
-  ```json Output
-  {
-    "messages": [
-      {
-        "role": "assistant",
-        "content": "{\n  \"reasoning\": \"The profit increased from EUR 1,007 million to EUR 1,019 million, indicating growth.\",\n  \"label\": \"Positive\"\n}"
-      }
-    ]
-  }
-  ```
-
-</CodeGroup>
-
-We are using Chain of Thought prompting to have the LLM reason over the sentence before giving the answer.
-
-### Implement
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/watch?v=pkmCn9ymWUg"
+  title="YouTube video player"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin"
+  allowFullScreen>
+</iframe>
 
